@@ -12,6 +12,7 @@ import {
 
 import { useAuthContext } from "../../context/AuthContext";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import useToastAPI from "./../../hooks/useToastAPI";
 
 interface User {
 	name: string;
@@ -25,7 +26,7 @@ interface Input {
 }
 
 const SignIn: React.FC<{}> = () => {
-	const { setUserDetail } = useAuthContext();
+	const { handleAuthState } = useAuthContext();
 
 	const [inputs, setInputs] = React.useState<Input>({
 		email: "",
@@ -45,22 +46,18 @@ const SignIn: React.FC<{}> = () => {
 		setShowSpinner(true);
 
 		try {
-			const res = await axios({
-				url: "/users/login",
-				method: "POST",
-				data: inputs,
-			});
-
-			const {
-				token,
-				data: { user },
-			} = res.data;
-
-			setUserDetail({ name: user.name, role: user.role, token });
+			// const res = await axios({
+			// 	url: "/users/login",
+			// 	method: "POST",
+			// 	data: inputs,
+			// });
+			// const { token } = res.data;
+			// handleAuthState(token);
 		} catch (error) {
-			console.log(error.message);
+			console.log(error.response);
 		} finally {
 			setShowSpinner(false);
+			useToastAPI();
 		}
 	};
 

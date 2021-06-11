@@ -20,7 +20,7 @@ interface User {
 }
 
 const SignUp: React.FC<{}> = () => {
-	const { setUserDetail } = useAuthContext();
+	const { handleAuthState } = useAuthContext();
 
 	const [inputs, setInputs] = useState({
 		name: "",
@@ -58,7 +58,7 @@ const SignUp: React.FC<{}> = () => {
 				data: { user },
 			} = res.data;
 
-			setUserDetail({ name: user.name, role: user.role, token });
+			handleAuthState(token);
 		} catch (error) {
 			console.log("Error ", error);
 		} finally {

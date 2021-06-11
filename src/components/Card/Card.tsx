@@ -23,8 +23,6 @@ const Card: React.FC<CardProps> = props => {
 
 	const { addItemToCart } = useBucketContext();
 
-	const { user } = useAuthContext();
-
 	return (
 		<Fragment>
 			<Box w='260px' h='100%'>

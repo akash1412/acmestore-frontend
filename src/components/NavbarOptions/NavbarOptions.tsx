@@ -1,26 +1,25 @@
 import React from "react";
 
-import { Box, Button, Link as LinkUI } from "@chakra-ui/react";
+import { Box, Link as LinkUI, Avatar } from "@chakra-ui/react";
 import { useAuthContext } from "../../context/AuthContext";
 import { useHistory } from "react-router-dom";
 import SignOut from "../Signout/Signout";
-import MenuProfile from "./../Menu/Menu";
 
 const NavbarOptions: React.FC<{}> = () => {
 	const { pathname } = useHistory().location;
 
-	const { user } = useAuthContext();
+	const { userInfo, token } = useAuthContext();
 
 	return (
 		<Box alignSelf='center' justifySelf='flex-end' d='flex' alignItems='center'>
-			{user?.role === "admin" && (
+			{userInfo?.role === "admin" && (
 				<LinkUI href='/add' mr='1rem' fontWeight='bold' textDecoration='none'>
 					add
 				</LinkUI>
 			)}
 			<LinkUI href='/profile'>profile</LinkUI>
 
-			{!user?.token ? (
+			{token ? (
 				<>
 					{pathname === "/auth" ? (
 						<LinkUI href='/'>Back</LinkUI>
@@ -31,7 +30,8 @@ const NavbarOptions: React.FC<{}> = () => {
 			) : (
 				<SignOut />
 			)}
-			<MenuProfile />
+
+			<Avatar src={userInfo?.photo} name={userInfo?.name} />
 		</Box>
 	);
 };

@@ -1,22 +1,25 @@
 import React from "react";
 
 import axios from "axios";
-
+import { useToast } from "@chakra-ui/react";
 interface User {
 	name: string;
 	role: string;
 	token: string;
+	photo?: string;
 }
 
 interface CreateContext {
-	user: null | User;
-	setUserDetail: (user: User) => void;
+	token: string | null;
+	userInfo: null | User;
+	handleAuthState: (a: string) => void;
 	signOut: () => void;
 }
 
 export const AuthContext = React.createContext<CreateContext>({
-	user: null,
-	setUserDetail: () => {},
+	token: null,
+	userInfo: null,
+	handleAuthState: () => {},
 	signOut: () => {},
 });
 
@@ -27,8 +30,8 @@ interface ContextProps {
 export const useAuthContext = () => React.useContext(AuthContext);
 
 const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
-	const [user, setUser] = React.useState(() => {
-		let store = JSON.parse(localStorage.getItem("user") || "{}");
+	const [token, setToken] = React.useState<string | null>((): any => {
+		let store = JSON.parse(localStorage.getItem("token") || "{}") || null;
 
 		return store;
 		// if (Object.keys(store).length === 0) {
@@ -36,14 +39,34 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 		// } else return store;
 	});
 
+	const [authState, setAuthState] = React.useState({ isLoggedIn: false });
+
+	const [userInfo, setUserInfo] = React.useState<User | null>(null);
+
 	React.useEffect(() => {
-		window.localStorage.setItem("user", JSON.stringify(user));
-	}, [user]);
+		window.localStorage.setItem("token", JSON.stringify(token));
+	}, [token]);
 
-	console.log(user);
+	React.useEffect(() => {
+		const fetchUserInfo = () => {
+			axios({
+				url: "https://ecom-api-v1.herokuapp.com/api/v1/users/me",
+				method: "GET",
+				headers: {
+					authorization: `Bearer ${token}`,
+				},
+			}).then(res => {
+				setUserInfo(res.data.data.user);
+			});
+		};
 
-	const setUserDetail = (user: User) => {
-		setUser(user);
+		if (token?.length! >= 0) {
+			fetchUserInfo();
+		}
+	}, [token]);
+
+	const handleAuthState = (token: string) => {
+		setToken(token);
 	};
 
 	const signOut = async () => {
@@ -51,19 +74,19 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 			await axios({
 				url: "https://ecom-api-v1.herokuapp.com/api/v1/users/signout",
 				headers: {
-					authorization: `Bearer ${user.token}`,
+					authorization: `Bearer ${token}`,
 				},
 				method: "DELETE",
 			}).then(() => localStorage.removeItem("token"));
 
-			setUser(null);
+			setToken(null);
 		} catch (error) {
 			console.log(error.response);
 		}
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, setUserDetail, signOut }}>
+		<AuthContext.Provider value={{ token, userInfo, handleAuthState, signOut }}>
 			{children}
 		</AuthContext.Provider>
 	);

@@ -22,12 +22,12 @@ interface Props {
 const BucketContextProvider: React.FC<Props> = ({ children }) => {
 	const [allCartItems, setCartItem] = React.useState<Item[]>([]);
 
-	const { user } = useAuthContext();
+	const { token } = useAuthContext();
 
 	const { toggleModal } = useModalContext();
 
 	const addItemToCart = (newItem: Item) => {
-		if (!user) {
+		if (!token) {
 			toggleModal();
 		} else {
 			setCartItem([...allCartItems, newItem]);

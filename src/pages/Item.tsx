@@ -24,7 +24,7 @@ interface RouteProps {
 interface Props extends RouteComponentProps<RouteProps> {}
 
 const ItemPage: FC<Props> = ({ match }) => {
-	const { user } = useAuthContext();
+	const { userInfo } = useAuthContext();
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -115,7 +115,7 @@ const ItemPage: FC<Props> = ({ match }) => {
 						${data?.price}
 					</Text>
 					<Box mt='auto' d='flex'>
-						{user?.role === "admin" ? (
+						{userInfo?.role === "admin" ? (
 							<>
 								<Button
 									mr='1.2rem'

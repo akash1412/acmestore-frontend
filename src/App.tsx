@@ -12,8 +12,6 @@ import { useAuthContext } from "./context/AuthContext";
 import ProfilePage from "./pages/Profile";
 
 const App: React.FC = () => {
-	const { user } = useAuthContext();
-
 	return (
 		<Main>
 			<Switch>
