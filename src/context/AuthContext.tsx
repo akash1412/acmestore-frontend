@@ -12,6 +12,7 @@ interface User {
 interface CreateContext {
 	token: string | null;
 	userInfo: null | User;
+	isLoggedIn: boolean;
 	handleAuthState: (a: string) => void;
 	signOut: () => void;
 }
@@ -19,6 +20,7 @@ interface CreateContext {
 export const AuthContext = React.createContext<CreateContext>({
 	token: null,
 	userInfo: null,
+	isLoggedIn: false,
 	handleAuthState: () => {},
 	signOut: () => {},
 });
@@ -31,15 +33,11 @@ export const useAuthContext = () => React.useContext(AuthContext);
 
 const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 	const [token, setToken] = React.useState<string | null>((): any => {
-		let store = JSON.parse(localStorage.getItem("token") || "{}") || null;
-
-		return store;
-		// if (Object.keys(store).length === 0) {
-		// 	return null;
-		// } else return store;
+		// @ts-ignore
+		return JSON.parse(localStorage.getItem("token"));
 	});
 
-	const [authState, setAuthState] = React.useState({ isLoggedIn: false });
+	const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
 	const [userInfo, setUserInfo] = React.useState<User | null>(null);
 
@@ -67,6 +65,7 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 
 	const handleAuthState = (token: string) => {
 		setToken(token);
+		setIsLoggedIn(true);
 	};
 
 	const signOut = async () => {
@@ -86,7 +85,8 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ token, userInfo, handleAuthState, signOut }}>
+		<AuthContext.Provider
+			value={{ token, userInfo, isLoggedIn, handleAuthState, signOut }}>
 			{children}
 		</AuthContext.Provider>
 	);

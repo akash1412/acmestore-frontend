@@ -1,13 +1,19 @@
 import { createStandaloneToast } from "@chakra-ui/react";
 
-const useToastAPI = () => {
+type toastProps = {
+	title: string;
+	status?: "error" | "warning" | "success";
+	description?: string;
+	duration: number;
+	isClosable: boolean;
+};
+
+const useToastAPI = () => (props: toastProps) => {
+	console.log(props);
 	const toast = createStandaloneToast();
 
 	return toast({
-		title: "YAY",
-		description: "sd",
-		isClosable: true,
-		duration: 1000,
+		...props,
 	});
 };
 

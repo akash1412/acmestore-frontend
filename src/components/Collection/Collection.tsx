@@ -12,14 +12,10 @@ interface CollectionProps {
 const Collection: React.FC<CollectionProps> = ({ items }): JSX.Element => {
 	return (
 		<Grid
-			mt='.4rem'
-			gridTemplateColumns={[
-				"repeat(1,1fr)",
-				"repeat(2,1fr)",
-				"repeat(3,1fr)",
-				"repeat(4,1fr)",
-			]}
-			gridGap='1rem'>
+			justifyContent='center'
+			gridTemplateColumns={["repeat(1,1fr)", "repeat(2,1fr)", "repeat(2,1fr)"]}
+			gridGap='1rem'
+			justifyItems='center'>
 			{items.map(item => (
 				<Card key={item._id} {...item} />
 			))}

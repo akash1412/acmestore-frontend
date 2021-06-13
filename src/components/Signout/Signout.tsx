@@ -8,10 +8,13 @@ const SignOut: React.FC<{}> = () => {
 
 	return (
 		<Button
+			mr='1rem'
 			p='0'
+			fontWeight='bold'
 			border='none'
 			bgColor='transparent'
 			_hover={{ bgColor: "transparent" }}
+			_active={{ bgColor: "transparent" }}
 			onClick={signOut}>
 			logout
 		</Button>

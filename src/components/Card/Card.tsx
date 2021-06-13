@@ -1,13 +1,11 @@
 import React from "react";
-import { Link as LinkUI, Flex, Box, Image, Heading } from "@chakra-ui/react";
+import { Box, Image, Heading, Text, Icon } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 
-import { Fragment, useState } from "react";
-import { AiOutlineHeart, AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
 import { Item } from "../../Interface/Interface";
-import { useBucketContext } from "./../../context/BucketContext";
+import { useDrawerContext } from "../../context/DrawerContext";
 import { useAuthContext } from "./../../context/AuthContext";
-
-import Button from "../button/button";
 
 /**
  * @param Interfaces
@@ -21,42 +19,50 @@ interface CardProps extends Item {
 const Card: React.FC<CardProps> = props => {
 	const { _id, title, slug, description, price, image, category } = props;
 
-	const { addItemToCart } = useBucketContext();
+	const { addItemToCart } = useDrawerContext();
+
+	const history = useHistory();
 
 	return (
-		<Fragment>
-			<Box w='260px' h='100%'>
-				<Flex flexDir='column' w='100%' h='100%' pos='relative'>
-					<LinkUI d='contents' href={`/s/${category}/${slug}`}>
-						<Flex role='group' w='100%' h='100%' overflow='hidden'>
-							<Image
-								width='100%'
-								height='100%'
-								objectFit='cover'
-								transition='transform .5s'
-								src={image}
-								alt={title}
-								_groupHover={{ transform: "scale(1.1)" }}
-							/>
-						</Flex>
-					</LinkUI>
-					<Button
-						pos='absolute'
-						bottom='1rem'
-						left='0'
-						right='0'
-						margin='0 auto'
-						zIndex='2'
-						padding='.4rem .8rem'
-						fontWeight='semibold'
-						bgColor='black'
-						opacity='.8'
-						color='#fff'>
-						Add To Cart
-					</Button>
-				</Flex>
+		<Box w='260px' h='28rem' pos='relative'>
+			<Box
+				pos='absolute'
+				top='2px'
+				right='2px'
+				bgColor='#fff'
+				borderRadius='100px'
+				w='2rem'
+				h='2rem'
+				p='.5rem'
+				d='grid'
+				placeItems='center'
+				onClick={(e: any) => addItemToCart({ id: _id, title, price, image })}>
+				<Icon as={AiOutlineHeart} />
 			</Box>
-		</Fragment>
+
+			<Box
+				cursor='pointer'
+				onClick={() => history.push(`/s/${category}/${slug}`)}>
+				<Box w='100%' h='90%'>
+					<Image
+						width='100%'
+						height='100%'
+						objectFit='cover'
+						transition='transform .5s'
+						borderRadius='.8rem'
+						src={image}
+						alt={title}
+					/>
+				</Box>
+
+				<Box mt='.2rem' d='flex' fontSize='1.2rem'>
+					<Heading margin='0' fontSize='inherit'>
+						{title}
+					</Heading>
+					<Text marginLeft='auto'>${price}</Text>
+				</Box>
+			</Box>
+		</Box>
 	);
 };
 

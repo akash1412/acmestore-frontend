@@ -8,11 +8,16 @@ import {
 	Icon,
 	useToast,
 	Spinner,
+	Button,
 } from "@chakra-ui/react";
 import { IoTrashBinOutline } from "react-icons/io5";
-import { AiOutlineEdit } from "react-icons/ai";
+import {
+	AiOutlineEdit,
+	AiOutlineShoppingCart,
+	AiOutlineHeart,
+} from "react-icons/ai";
+import useToastAPI from "../hooks/useToastAPI";
 
-import Button from "../components/button/button";
 import axios from "../API/API";
 import { Item } from "./../Interface/Interface";
 import { useAuthContext } from "../context/AuthContext";
@@ -87,23 +92,24 @@ const ItemPage: FC<Props> = ({ match }) => {
 	}
 
 	return (
-		<Box px='2rem' py='1rem' w='100%' h='100%' d='flex' justifyContent='center'>
-			<Box w='90%' h='80%' d='flex'>
-				<Box w='25rem' h='60%'>
+		<Box w='100%' h='100%' d='grid' placeItems='center' py='2.5rem'>
+			<Box
+				py='1rem'
+				w='90%'
+				m='0 auto'
+				h='100%'
+				d='flex'
+				justifyContent='center'>
+				<Box w='260px'>
 					<Image
 						src={data?.image}
 						alt={data?.title}
 						w='100%'
-						h='100%'
+						borderRadius='.8rem'
 						objectFit='cover'
 					/>
 				</Box>
-				<Box
-					style={{ flexGrow: 1 }}
-					ml='2rem'
-					px='1rem'
-					d='flex'
-					flexDir='column'>
+				<Box ml='2rem' px='1rem' d='flex' flexDir='column'>
 					<Heading fontSize='2rem' mb='1.2rem'>
 						{data?.title}
 					</Heading>
@@ -158,8 +164,25 @@ const ItemPage: FC<Props> = ({ match }) => {
 							</>
 						) : (
 							<>
-								<Button mr='1.2rem'>Add To Cart</Button>
-								<Button>Add To Wishlist</Button>
+								<Button
+									w='8rem'
+									bgColor='black'
+									color='#fff'
+									boxShadow='md'
+									_hover={{ bgColor: "black" }}
+									_active={{ bgColor: "black" }}>
+									<Icon as={AiOutlineShoppingCart} w='1.4rem' h='1.4rem' />
+								</Button>
+								<Button
+									w='8rem'
+									border='1.5px solid black'
+									color='black'
+									bgColor='#fff'
+									ml='2rem'
+									_hover={{ bgColor: "black", color: "#fff" }}
+									_active={{ bgColor: "black", color: "#fff" }}>
+									<Icon as={AiOutlineHeart} w='1.4rem' h='1.4rem' />
+								</Button>
 							</>
 						)}
 					</Box>
@@ -170,83 +193,3 @@ const ItemPage: FC<Props> = ({ match }) => {
 };
 
 export default ItemPage;
-
-// 	return <Box w='100%' d='grid' placeItems='center' px='2rem' py='1rem'>
-// 	<Box w='90%' d='flex'>
-// 		<Box width='25rem' h='25rem'>
-// 			<Image
-// 				src={data.image}
-// 				alt={data.title}
-// 				w='100%'
-// 				h='100%'
-// 				objectFit='cover'
-// 				objectPosition='center'
-// 			/>
-// 		</Box>
-// 		<Box
-// 			style={{ flexGrow: 1 }}
-// 			ml='2rem'
-// 			px='1rem'
-// 			d='flex'
-// 			flexDir='column'>
-// 			<Heading fontSize='2rem' mb='1.2rem'>
-// 				{data.title}
-// 			</Heading>
-// 			<Text fontWeight='semibold' mb='2rem'>
-// 				{data?.description ||
-// 					"psum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}
-// 			</Text>
-// 			<Text fontWeight='semi-bold' fontSize='1.5rem'>
-// 				${data.price}
-// 			</Text>
-// 			<Box mt='auto' d='flex'>
-// 				{user?.role === "admin" ? (
-// 					<>
-// 						<Button
-// 							mr='1.2rem'
-// 							border='none'
-// 							borderRadius='none'
-// 							px='3rem'
-// 							bgColor='black'
-// 							_hover={{
-// 								bgColor: "black",
-// 							}}
-// 							_active={{
-// 								bgColor: "black",
-// 							}}
-// 							onClick={() => router.push(`/edit/${data.slug}`)}>
-// 							<Icon as={AiOutlineEdit} fontSize='1.2rem' color='#fff' />
-// 						</Button>
-// 						<Button
-// 							border='none'
-// 							borderRadius='none'
-// 							px='3rem'
-// 							bgColor='red.500'
-// 							_active={{
-// 								bgColor: "red.500",
-// 							}}
-// 							_hover={{
-// 								bgColor: "red.500",
-// 							}}
-// 							onClick={deleteItem}>
-// 							{deletingItem ? (
-// 								<Spinner color='#fff' />
-// 							) : (
-// 								<Icon
-// 									as={IoTrashBinOutline}
-// 									fontSize='1.2rem'
-// 									color='#fff'
-// 								/>
-// 							)}
-// 						</Button>
-// 					</>
-// 				) : (
-// 					<>
-// 						<Button mr='1.2rem'>Add To Cart</Button>
-// 						<Button>Add To Wishlist</Button>
-// 					</>
-// 				)}
-// 			</Box>
-// 		</Box>
-// 	</Box>
-// </Box>;

@@ -3,7 +3,8 @@ import { Box } from "@chakra-ui/react";
 import Navbar from "../Navbar/Navbar";
 
 import ModalContextProvider from "../../context/ModalContext";
-import BucketContainer from "./../BucketContainer/BucketContainer";
+import DrawerContainer from "../DrawerContainer/DrawerContainer";
+import DrawerContextProvider from "../../context/DrawerContext";
 interface MainCompProps {
 	children: string | React.ReactNode;
 }
@@ -11,13 +12,17 @@ interface MainCompProps {
 const Main: React.FC<MainCompProps> = ({ children }) => {
 	return (
 		<React.Fragment>
-			<Navbar />
-			<Box mt='4.5rem'>
-				<Box minH='calc(100vh - 4.5rem)' d='flex'>
-					{children}
+			<DrawerContextProvider>
+				<Navbar />
+
+				<Box mt='4.5rem'>
+					<Box minH='calc(100vh - 4.5rem)' d='flex'>
+						{children}
+					</Box>
 				</Box>
-			</Box>
-			{/* <BucketContainer /> */}
+
+				<DrawerContainer />
+			</DrawerContextProvider>
 		</React.Fragment>
 	);
 };

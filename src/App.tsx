@@ -1,10 +1,10 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Main from "./components/Main/Main";
 import Home from "./pages/AllItems";
-import Category from "./pages/Catergory";
+// import Category from "./pages/Catergory";
 
 import Item from "./pages/Item";
 import AuthPage from "./pages/AuthPage";
@@ -16,7 +16,7 @@ const App: React.FC = () => {
 		<Main>
 			<Switch>
 				<Route exact path='/' component={Home} />
-				<Route exact path='/s/:c' component={Category} />
+				{/* <Route exact path='/s/:c' component={Category} /> */}
 				<Route exact path='/s/:category/:slug' component={Item} />
 				<Route exact path='/auth'>
 					<AuthPage />
