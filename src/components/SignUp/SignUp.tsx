@@ -4,20 +4,16 @@ import {
 	FormControl,
 	Input,
 	FormLabel,
-	Button,
 	Spinner,
+	Heading,
+	Stack,
 } from "@chakra-ui/react";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import Button from "../button/button";
 
 import axios from "../../API/API";
 
 import { useAuthContext } from "../../context/AuthContext";
-
-interface User {
-	name: string;
-	role: string;
-	token: string;
-}
 
 const SignUp: React.FC<{}> = () => {
 	const { handleAuthState } = useAuthContext();
@@ -58,7 +54,12 @@ const SignUp: React.FC<{}> = () => {
 				data: { user },
 			} = res.data;
 
-			handleAuthState(token);
+			handleAuthState({
+				name: user.name,
+				token: token,
+				role: user.role,
+				photo: user.photo || null,
+			});
 		} catch (error) {
 			console.log("Error ", error);
 		} finally {
@@ -68,64 +69,77 @@ const SignUp: React.FC<{}> = () => {
 	};
 
 	return (
-		<Flex w='100%' h='100%' flexDir='column' justifyContent='space-between'>
-			<FormControl>
-				<FormLabel>Name</FormLabel>
-				<Input
-					borderRadius='none'
-					name='name'
-					value={inputs.name}
-					onChange={handleInputChange}
-					placeholder='John Doe'
-				/>
-			</FormControl>
-			<FormControl>
-				<FormLabel>Email</FormLabel>
-				<Input
-					borderRadius='none'
-					name='email'
-					value={inputs.email}
-					onChange={handleInputChange}
-					placeholder='Email'
-				/>
-			</FormControl>
-			<FormControl>
-				<FormLabel>Password</FormLabel>
+		<Flex flexDir='column' w={["100%", "25rem"]}>
+			<Heading fontSize={["1.5rem", "2rem"]} mb='1rem'>
+				Create your account
+			</Heading>
+			<form style={{ marginTop: "1.4rem" }}>
+				<Stack direction='column' spacing='2rem' fontSize={["1rem", "1.2rem"]}>
+					<FormControl>
+						<FormLabel fontSize='inherit' fontWeight='semibold'>
+							Name
+						</FormLabel>
+						<Input
+							borderRadius='none'
+							name='name'
+							value={inputs.name}
+							required
+							onChange={handleInputChange}
+							placeholder='John Doe'
+						/>
+					</FormControl>
+					<FormControl>
+						<FormLabel fontSize='inherit' fontWeight='semibold'>
+							Email
+						</FormLabel>
+						<Input
+							borderRadius='none'
+							name='email'
+							value={inputs.email}
+							required
+							onChange={handleInputChange}
+							placeholder='Email'
+						/>
+					</FormControl>
+					<FormControl>
+						<FormLabel fontSize='inherit' fontWeight='semibold'>
+							Password
+						</FormLabel>
 
-				<PasswordInput
-					name='password'
-					value={inputs.password}
-					onChange={handleInputChange}
-				/>
-			</FormControl>
-			<FormControl>
-				<FormLabel>Confirm Password</FormLabel>
+						<PasswordInput
+							name='password'
+							value={inputs.password}
+							onChange={handleInputChange}
+						/>
+					</FormControl>
+					<FormControl>
+						<FormLabel fontSize='inherit' fontWeight='semibold'>
+							Confirm Password
+						</FormLabel>
 
-				<PasswordInput
-					placeholder='Confirm Password'
-					name='confirmPassword'
-					value={inputs.confirmPassword}
-					onChange={handleInputChange}
-				/>
-			</FormControl>
-			<Button
-				alignSelf='center'
-				w='10rem'
-				mt='2rem'
-				px='2rem'
-				borderRadius='none'
-				bgColor='black'
-				color='white'
-				border='1.6px solid black'
-				_hover={{
-					bgColor: "white",
-					color: "black",
-					border: "1.6px solid black",
-				}}
-				opacity={showSpinner ? ".7" : "1"}
-				onClick={SignUpUser}>
-				{showSpinner ? <Spinner size='sm' /> : "Sign Up"}
-			</Button>
+						<PasswordInput
+							placeholder='Confirm Password'
+							name='confirmPassword'
+							value={inputs.confirmPassword}
+							onChange={handleInputChange}
+						/>
+					</FormControl>
+					<Button
+						px='2rem'
+						bgColor='black'
+						color='white'
+						border='1.6px solid black'
+						_hover={{
+							bgColor: "white",
+							color: "black",
+							border: "1.6px solid black",
+						}}
+						opacity={showSpinner ? ".7" : "1"}
+						onClick={SignUpUser}>
+						{showSpinner ? <Spinner size='sm' /> : "Sign Up"}
+					</Button>
+				</Stack>
+			</form>
 		</Flex>
 	);
 };

@@ -10,9 +10,9 @@ interface Props {
 }
 
 const PrivateRoute: FC<Props> = ({ path, component, exact }) => {
-	const { token } = useAuthContext();
+	const { user } = useAuthContext();
 
-	return token ? (
+	return user?.token ? (
 		<Route exact={exact} path={path} component={component} />
 	) : (
 		<Redirect to='/auth' />

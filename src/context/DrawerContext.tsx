@@ -1,15 +1,22 @@
 import React from "react";
-import { CartItem } from "../Interface/Interface";
+import { CartItems, CartItem } from "../Interface/Interface";
 import { saveItemToCart, deleteItemFromCart } from "../utils/helper";
 import { useAuthContext } from "./AuthContext";
 import useToastAPI from "./../hooks/useToastAPI";
+import axios from "./../API/API";
 
+interface newCartItem {
+	itemID: string;
+	title: string;
+	price: number;
+	image: string;
+}
 interface CreateContext {
 	openDrawer: boolean;
 	toggleDrawer: () => void;
 	activeDrawerTab: string;
 	handleActiveTab: (v: string) => void;
-	allCartItems: CartItem[];
+	allCartItems: CartItems;
 	addItemToCart: (item: any) => void;
 	removeItemFromCart: (item: CartItem) => void;
 }
@@ -33,11 +40,28 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 
 	const [activeDrawerTab, setActiveDrawerTab] = React.useState("cart");
 
-	const [allCartItems, setCartItem] = React.useState<CartItem[]>([]);
+	const [allCartItems, setCartItems] = React.useState<CartItems>([]);
 
-	const { token } = useAuthContext();
+	const { user } = useAuthContext();
 
-	const toastAPI = useToastAPI();
+	const toast = useToastAPI();
+
+	React.useEffect(() => {
+		if (user?.token) {
+			const FETCH_CARTITEMS = async () => {
+				const response = await axios({
+					url: "/cart",
+					method: "GET",
+					headers: {
+						authorization: `Bearer ${user.token}`,
+					},
+				});
+
+				setCartItems(response.data.data.cartItems);
+			};
+			FETCH_CARTITEMS();
+		}
+	}, [user?.token]);
 
 	const handleActiveTab = (value: string) => {
 		setActiveDrawerTab(value);
@@ -47,27 +71,59 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 		setOpenDrawer(prevState => !prevState);
 	};
 
-	const addItemToCart = (newItem: any) => {
+	const addItemToCart = async (newItem: newCartItem) => {
 		//1.check if the item exists in the cart
 		//2.if yes then increate the qty;
 		//3.else add new item with qty property set to 1.
 
-		setCartItem(saveItemToCart(newItem, allCartItems));
-		toastAPI({
-			title: "yay",
-			duration: 3000,
-			isClosable: true,
-			status: "success",
-		});
+		if (!user?.token) {
+			return toast({
+				title: "You are not logged In",
+				duration: 1000,
+				isClosable: true,
+				status: "error",
+			});
+		}
+
+		try {
+			const res = await axios({
+				url: "/cart",
+				method: "POST",
+				headers: {
+					authorization: `Bearer ${user?.token}`,
+				},
+				data: newItem,
+			});
+
+			// console.log(res.data.data.item);
+
+			// setCartItems(saveItemToCart(newItem, allCartItems));
+
+			toast({
+				title: "Item added to Cart",
+				duration: 1000,
+				isClosable: true,
+				status: "success",
+			});
+		} catch (error) {
+			toast({
+				title: "something went wrong",
+				description: "Try again later.",
+				duration: 1000,
+				isClosable: true,
+				status: "error",
+			});
+		}
+
 		// if (!token) {
 		// 	// toggleModal();
 		// } else {
-		// 	setCartItem([newItem, ...allCartItems]);
+		// 	setCartItems([newItem, ...allCartItems]);
 		// }
 	};
 
 	const removeItemFromCart = (item: CartItem) => {
-		setCartItem(deleteItemFromCart(item, allCartItems));
+		setCartItems(deleteItemFromCart(item, allCartItems));
 	};
 
 	return (

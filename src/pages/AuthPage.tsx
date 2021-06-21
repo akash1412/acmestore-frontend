@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import { Box, Heading } from "@chakra-ui/react";
-import Button from "../components/button/button";
+import { Box } from "@chakra-ui/react";
+
 import SignIn from "./../components/SignIn/SignIn";
 import SignUp from "./../components/SignUp/SignUp";
 
@@ -13,30 +13,24 @@ const AuthPage: FC = () => {
 
 	return (
 		<Box
-			py='.5rem'
-			px='1.5rem'
+			py={["1rem", ".5rem"]}
+			px={[".4rem", ".4rem", "1.5rem"]}
 			w='100%'
-			h='100%'
-			pos='absolute'
-			d='grid'
-			placeItems='center'>
-			<Box d='flex' flexDir='column' boxShadow='lg'>
-				<Box p='2rem' textAlign='center'>
-					{!toggleSignup ? (
-						<Heading fontSize='2rem'>Login in to your account</Heading>
-					) : (
-						<Heading fontSize='2rem'>Create your account</Heading>
-					)}
-					<SignIn />
+			m={[0, "0 auto"]}
+			d={["block", "grid"]}
+			placeItems={["initial", "center"]}>
+			<Box d='flex' flexDir='column' bgColor='#fff' borderRadius='.2rem'>
+				<Box px={["0.5rem", "2rem"]} py='1rem' textAlign='center'>
+					{!toggleSignup ? <SignIn /> : <SignUp />}
 				</Box>
-				<Box alignSelf='center' justifySelf='flex-end'>
+				<Box alignSelf='center' justifySelf='flex-end' my='1rem'>
 					{!toggleSignup ? (
 						<Box
 							cursor='pointer'
 							fontWeight='bold'
 							fontSize='1.2rem'
 							onClick={handleFormToggle}>
-							SignUp
+							or create your account
 						</Box>
 					) : (
 						<Box
@@ -44,7 +38,7 @@ const AuthPage: FC = () => {
 							fontWeight='bold'
 							fontSize='1.2rem'
 							onClick={handleFormToggle}>
-							Login
+							or login to your account
 						</Box>
 					)}
 				</Box>

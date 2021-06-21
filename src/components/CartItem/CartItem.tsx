@@ -1,41 +1,63 @@
 import { FC } from "react";
 import { CartItem as ICartItem } from "../../Interface/Interface";
-import { Box, Image, Heading, Text, Stack } from "@chakra-ui/react";
+import { Box, Image, Heading, Text, Stack, Icon } from "@chakra-ui/react";
+import { RiDeleteBinLine } from "react-icons/ri";
+import Button from "./../button/button";
 
 interface Props extends ICartItem {
 	removeItemFromCart: (item: ICartItem) => void;
 }
 
 const CartItem: FC<Props> = props => {
-	const { removeItemFromCart, id, title, price, image, quantity } = props;
+	const {
+		removeItemFromCart,
+		id,
+		title,
+		price,
+		image,
+		quantity,
+		itemID,
+		user,
+	} = props;
 
 	return (
-		<Box d='flex' mb='2rem'>
-			<Box w='6rem' h='6rem' borderRadius='.4rem'>
+		<Box d='flex' justifyContent='flex-start' mb='2rem'>
+			<Box w='5rem' h='5rem' borderRadius='.2rem' mr='1rem'>
 				<Image
-					d='block'
-					maxW='100%'
-					maxH='100%'
-					borderRadius='.4rem'
+					w='100%'
+					h='100%'
+					objectFit='cover'
+					borderRadius='.2rem'
 					src={image}
 					alt={title}
 				/>
 			</Box>
-
-			<Box flexGrow={1}>
-				<Heading size='md' mb='.4rem'>
-					{title}
-				</Heading>
-				<Text>${price}</Text>
-				<Text>{quantity}</Text>
-
-				<Stack />
-				<Box
-					onClick={() =>
-						removeItemFromCart({ id, title, price, image, quantity })
-					}>
-					remove
-				</Box>
+			<Box d='flex'>
+				<Stack flexDir='column' spacing='2px'>
+					<Heading fontSize='1.2rem' mb='.4rem'>
+						{title}
+					</Heading>
+					<Text>${price}</Text>
+				</Stack>
+				<Stack ml='1rem' spacing='1rem'>
+					<Text>qty:{quantity}</Text>
+					<Button
+						alignSelf='flex-end'
+						bgColor='red.400'
+						onClick={() =>
+							removeItemFromCart({
+								id,
+								title,
+								price,
+								image,
+								quantity,
+								itemID,
+								user,
+							})
+						}>
+						<Icon as={RiDeleteBinLine} color='#fff' />
+					</Button>
+				</Stack>
 			</Box>
 		</Box>
 	);

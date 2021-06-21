@@ -1,10 +1,11 @@
 import React from "react";
-import { Box, Flex, Heading } from "@chakra-ui/react";
-import SearchBar from "../SearchBar/SearchBar";
+import { Flex, Heading } from "@chakra-ui/react";
 
 import NavbarOptions from "../NavbarOptions/NavbarOptions";
 
-const Navbar: React.FC<{}> = () => {
+const Navbar: React.FC<{
+	toggleSidebar: () => void;
+}> = ({ toggleSidebar }) => {
 	return (
 		<Flex
 			bgColor='white'
@@ -13,14 +14,13 @@ const Navbar: React.FC<{}> = () => {
 			zIndex='5'
 			h='4.5rem'
 			w='100%'
-			px='1.4rem'
+			px={["1rem", "1.4rem"]}
 			alignItems='center'
-			justifyContent='space-between'>
+			justifyContent='space-between'
+			boxShadow='md'>
 			<Flex>
 				<Heading size='md'>L</Heading>
-				{/* <NavLinks /> */}
 			</Flex>
-			<SearchBar />
 
 			<NavbarOptions />
 		</Flex>

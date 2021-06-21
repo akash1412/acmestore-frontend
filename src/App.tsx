@@ -6,10 +6,10 @@ import Main from "./components/Main/Main";
 import Home from "./pages/AllItems";
 // import Category from "./pages/Catergory";
 
-import Item from "./pages/Item";
+import ItemPage from "./pages/Item/ItemPage";
 import AuthPage from "./pages/AuthPage";
 import { useAuthContext } from "./context/AuthContext";
-import ProfilePage from "./pages/Profile";
+import ProfilePage from "./pages/Profile/Profile";
 
 const App: React.FC = () => {
 	return (
@@ -17,7 +17,7 @@ const App: React.FC = () => {
 			<Switch>
 				<Route exact path='/' component={Home} />
 				{/* <Route exact path='/s/:c' component={Category} /> */}
-				<Route exact path='/s/:category/:slug' component={Item} />
+				<Route exact path='/s/:category/:slug' component={ItemPage} />
 				<Route exact path='/auth'>
 					<AuthPage />
 					{/* {!user?.token ? : <Redirect to='/' />} */}

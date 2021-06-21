@@ -1,5 +1,5 @@
 export interface Item {
-	_id: string;
+	_id: string | undefined;
 	title: string;
 	slug: string;
 	description?: string;
@@ -16,4 +16,14 @@ export type CartItem = {
 	price: number;
 	image: string;
 	quantity: number;
+	itemID: string;
+	user: string;
 };
+
+export type CartItems = CartItem[];
+
+export interface IUpdateProfile {
+	name?: string;
+	email?: string;
+	photo?: string;
+}

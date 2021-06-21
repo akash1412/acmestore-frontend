@@ -1,7 +1,9 @@
 import React from "react";
-
+import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { useToast } from "@chakra-ui/react";
+import jwt, { JwtPayload } from "jwt-decode";
+
+import { IUpdateProfile } from "../Interface/Interface";
 interface User {
 	name: string;
 	role: string;
@@ -10,19 +12,19 @@ interface User {
 }
 
 interface CreateContext {
-	token: string | null;
-	userInfo: null | User;
-	isLoggedIn: boolean;
-	handleAuthState: (a: string) => void;
+	user: User | null;
+
+	handleAuthState: (data: User) => void;
 	signOut: () => void;
+	updateUserOverviewData: (a: IUpdateProfile) => void;
 }
 
 export const AuthContext = React.createContext<CreateContext>({
-	token: null,
-	userInfo: null,
-	isLoggedIn: false,
+	user: null,
+
 	handleAuthState: () => {},
 	signOut: () => {},
+	updateUserOverviewData: data => {},
 });
 
 interface ContextProps {
@@ -32,53 +34,49 @@ interface ContextProps {
 export const useAuthContext = () => React.useContext(AuthContext);
 
 const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
-	const [token, setToken] = React.useState<string | null>((): any => {
+	const [user, setUser] = React.useState<any | null>((): any => {
 		// @ts-ignore
-		return JSON.parse(localStorage.getItem("token"));
+		const user = JSON.parse(localStorage.getItem("user"));
+		// if (user) {
+		// 	const payload: number = jwt<JwtPayload>(user?.token).exp!;
+		// 	const isTokenExpired = Date.now() > new Date(payload * 1000).getTime();
+
+		// 	return isTokenExpired ? null : user;
+		// }
+
+		return user;
 	});
 
-	const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+	console.log(user);
 
-	const [userInfo, setUserInfo] = React.useState<User | null>(null);
-
-	React.useEffect(() => {
-		window.localStorage.setItem("token", JSON.stringify(token));
-	}, [token]);
+	const history = useHistory();
 
 	React.useEffect(() => {
-		const fetchUserInfo = () => {
-			axios({
-				url: "https://ecom-api-v1.herokuapp.com/api/v1/users/me",
-				method: "GET",
-				headers: {
-					authorization: `Bearer ${token}`,
-				},
-			}).then(res => {
-				setUserInfo(res.data.data.user);
-			});
-		};
+		window.localStorage.setItem("user", JSON.stringify(user));
+	}, [user]);
 
-		if (token?.length! >= 0) {
-			fetchUserInfo();
-		}
-	}, [token]);
+	const handleAuthState = (data: User) => {
+		setUser(data);
+	};
 
-	const handleAuthState = (token: string) => {
-		setToken(token);
-		setIsLoggedIn(true);
+	const updateUserOverviewData = (updatedData: IUpdateProfile) => {
+		setUser({ ...user, ...updatedData });
 	};
 
 	const signOut = async () => {
 		try {
-			await axios({
-				url: "https://ecom-api-v1.herokuapp.com/api/v1/users/signout",
-				headers: {
-					authorization: `Bearer ${token}`,
-				},
-				method: "DELETE",
-			}).then(() => localStorage.removeItem("token"));
+			// await axios({
+			// 	url: "https://ecom-api-v1.herokuapp.com/api/v1/users/signout",
+			// 	headers: {
+			// 		// @ts-ignore
+			// 		authorization: `Bearer ${JSON.parse(user.token)}`,
+			// 	},
+			// 	method: "DELETE",
+			// }).then(() => localStorage.removeItem("token"));
 
-			setToken(null);
+			setUser(null);
+
+			history.push("/");
 		} catch (error) {
 			console.log(error.response);
 		}
@@ -86,7 +84,7 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 
 	return (
 		<AuthContext.Provider
-			value={{ token, userInfo, isLoggedIn, handleAuthState, signOut }}>
+			value={{ user, handleAuthState, signOut, updateUserOverviewData }}>
 			{children}
 		</AuthContext.Provider>
 	);

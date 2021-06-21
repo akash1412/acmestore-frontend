@@ -36,10 +36,12 @@ const DrawerContainer = () => {
 				<DrawerCloseButton />
 
 				<DrawerHeader>
-					{activeDrawerTab === "cart" ? "Your Cart" : "Your liked products"}
+					{activeDrawerTab === "cart"
+						? "Your Cart Items"
+						: "Your liked products"}
 				</DrawerHeader>
 
-				<DrawerBody>
+				<DrawerBody px={["14px", "24px"]}>
 					<Cart cartItems={allCartItems} />
 				</DrawerBody>
 			</DrawerContent>
