@@ -33,7 +33,7 @@ const SignUp: React.FC<{}> = () => {
 		setInputs({ ...inputs, [name]: value });
 	};
 
-	const SignUpUser = async () => {
+	const SignUpUser = async (e: React.FormEvent) => {
 		const { name, email, password, confirmPassword: passwordConfirm } = inputs;
 		setShowSpinner(true);
 
@@ -73,7 +73,7 @@ const SignUp: React.FC<{}> = () => {
 			<Heading fontSize={["1.5rem", "2rem"]} mb='1rem'>
 				Create your account
 			</Heading>
-			<form style={{ marginTop: "1.4rem" }}>
+			<form onSubmit={SignUpUser} style={{ marginTop: "1.4rem" }}>
 				<Stack direction='column' spacing='2rem' fontSize={["1rem", "1.2rem"]}>
 					<FormControl>
 						<FormLabel fontSize='inherit' fontWeight='semibold'>
@@ -135,8 +135,10 @@ const SignUp: React.FC<{}> = () => {
 							border: "1.6px solid black",
 						}}
 						opacity={showSpinner ? ".7" : "1"}
-						onClick={SignUpUser}>
-						{showSpinner ? <Spinner size='sm' /> : "Sign Up"}
+						isLoading={showSpinner}
+						loadingSpinner={<Spinner size='sm' />}
+						loadingText='creating account...'>
+						Sign Up
 					</Button>
 				</Stack>
 			</form>

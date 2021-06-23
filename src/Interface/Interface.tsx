@@ -1,5 +1,5 @@
 export interface Item {
-	_id: string | undefined;
+	_id?: string | undefined;
 	title: string;
 	slug: string;
 	description?: string;
@@ -8,6 +8,13 @@ export interface Item {
 	category: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface newCartItem {
+	itemID: string;
+	title: string;
+	price: number;
+	image: string;
 }
 
 export type CartItem = {

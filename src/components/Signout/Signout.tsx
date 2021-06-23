@@ -4,13 +4,12 @@ import { Button } from "@chakra-ui/react";
 import { useAuthContext } from "../../context/AuthContext";
 
 const SignOut: React.FC<{}> = () => {
-	const { signOut } = useAuthContext();
+	const { signOut, user } = useAuthContext();
 
 	return (
 		<Button
-			mr='1rem'
+			isDisabled={!Boolean(user)}
 			p='0'
-			fontWeight='bold'
 			border='none'
 			bgColor='transparent'
 			_hover={{ bgColor: "transparent" }}

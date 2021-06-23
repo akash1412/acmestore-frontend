@@ -1,7 +1,7 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Icon } from "@chakra-ui/react";
 import Navbar from "../Navbar/Navbar";
-
+import { IoCaretDownCircleOutline } from "react-icons/io5";
 import ModalContextProvider from "../../context/ModalContext";
 import DrawerContainer from "../DrawerContainer/DrawerContainer";
 import DrawerContextProvider from "../../context/DrawerContext";
@@ -26,9 +26,9 @@ const Main: React.FC<MainCompProps> = ({ children }) => {
 				<Box mt='4.5rem' pos='relative'>
 					<Box
 						minH='calc(100vh - 4.5rem)'
-						position='absolute'
 						d='flex'
 						w='100%'
+						h='100%'
 						bgColor='#f1faee'>
 						{children}
 					</Box>

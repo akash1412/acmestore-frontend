@@ -16,7 +16,7 @@ interface CardProps extends Item {
 }
 
 const Card: React.FC<CardProps> = props => {
-	const { _id, title, slug, description, price, image, category } = props;
+	const { _id, title, slug, price, image, category } = props;
 
 	const { addItemToCart } = useDrawerContext();
 

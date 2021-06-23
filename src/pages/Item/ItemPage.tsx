@@ -1,16 +1,17 @@
-import { FC, useState, useEffect, Fragment } from "react";
+import { FC, useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Box, Spinner, Icon } from "@chakra-ui/react";
 import { BsArrowLeft } from "react-icons/bs";
 import useToastAPI from "../../hooks/useToastAPI";
-
+import { Item as ItemScreen } from "../../components/SkeletonScreens/SkeletonScreen";
 import axios from "../../API/API";
-import { Item } from "../../Interface/Interface";
+import { CartItem, Item, newCartItem } from "../../Interface/Interface";
 import { useAuthContext } from "../../context/AuthContext";
 
 import { useDrawerContext } from "./../../context/DrawerContext";
 
 import ItemContent from "./parts/ItemContent";
+import MetaHead from "../../components/MetaHead/MetaHead";
 
 interface RouteProps {
 	slug: string;
@@ -24,8 +25,6 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [data, setData] = useState<null | Item>(null);
-
-	const { addItemToCart } = useDrawerContext();
 
 	const toast = useToastAPI();
 
@@ -85,34 +84,31 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 				justifyContent='center'
 				alignItems='center'>
 				<Spinner size='xl' />
+				{/* <ItemScreen /> */}
 			</Box>
 		);
 	}
 
-	const handleAddToCartItemAction = () => {
-		addItemToCart(data);
-	};
-
 	return (
-		<Fragment>
-			<Box py='2.5rem'>
-				<Icon
-					as={BsArrowLeft}
-					ml='1rem'
-					fontSize='2rem'
-					onClick={() => history.goBack()}
+		<Box w='100%' h='100%'>
+			<MetaHead title={match.params.slug} />
+			<Icon
+				as={BsArrowLeft}
+				mt='2rem'
+				ml='4rem'
+				fontSize='2rem'
+				cursor='pointer'
+				onClick={() => history.goBack()}
+			/>
+			<Box my={["2rem", "4rem"]} d='flex' justifyContent='center'>
+				<ItemContent
+					{...data}
+					role={user?.role}
+					handleDeleteItemAction={handleDeleteItemAction}
+					deletingItem={deletingItem}
 				/>
-				<Box w='100%' h='100%' d='grid' placeItems='center'>
-					<ItemContent
-						{...data}
-						role={user?.role}
-						handleDeleteItemAction={handleDeleteItemAction}
-						handleAddToCartItemAction={handleAddToCartItemAction}
-						deletingItem={deletingItem}
-					/>
-				</Box>
 			</Box>
-		</Fragment>
+		</Box>
 	);
 };
 

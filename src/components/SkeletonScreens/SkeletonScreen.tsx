@@ -1,4 +1,4 @@
-import { Box, Grid, Skeleton } from "@chakra-ui/react";
+import { Box, Grid, Skeleton, SkeletonText } from "@chakra-ui/react";
 
 const ItemLoadingScreen = () => {
 	return (
@@ -33,5 +33,19 @@ export const ItemsLoading = () => {
 				<ItemLoadingScreen />
 			))}
 		</Grid>
+	);
+};
+
+export const Item = () => {
+	return (
+		<Box d='flex'>
+			<Skeleton w='260px' h='25rem' />
+			<Box d='flex' flexDir='column'>
+				<SkeletonText noOfLines={2} />
+				<Box d='flex'>
+					<Skeleton w='8rem' mr='2rem' /> <Skeleton w='8rem' />
+				</Box>
+			</Box>
+		</Box>
 	);
 };

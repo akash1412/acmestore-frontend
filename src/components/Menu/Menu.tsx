@@ -1,30 +1,40 @@
 import React from "react";
 
-import Avatar from "./../Avatar/Avatar";
+import {
+	Menu,
+	MenuButton,
+	MenuList,
+	MenuItem,
+	Avatar,
+	Link,
+	Button,
+} from "@chakra-ui/react";
+import SignOut from "../Signout/Signout";
 
-import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
+interface Props {
+	src: string;
+	name: string;
+}
 
-const MenuProfile: React.FC<{}> = () => {
+const MenuProfile: React.FC<Props> = props => {
 	return (
-		<Menu>
-			<MenuButton
-				as={Button}
-				p='0'
-				border='none'
-				borderRadius='none'
-				bgColor='transparent'
-				_hover={{ bgColor: "transparent" }}>
-				<Avatar />
-			</MenuButton>
-			<MenuList>
-				<MenuItem>
-					<a href='/profile'>
-						<a>profile</a>
-					</a>
-				</MenuItem>
-				<MenuItem>logout</MenuItem>
-			</MenuList>
-		</Menu>
+		<React.Fragment>
+			<Menu>
+				<MenuButton>
+					<Avatar size='sm' src={props.src} name={props.name} />
+				</MenuButton>
+				<MenuList>
+					<MenuItem>
+						<Link w='100%' href='/profile'>
+							profile
+						</Link>
+					</MenuItem>
+					<MenuItem>
+						<SignOut />
+					</MenuItem>
+				</MenuList>
+			</Menu>
+		</React.Fragment>
 	);
 };
 

@@ -9,7 +9,6 @@ type toastProps = {
 };
 
 const useToastAPI = () => (props: toastProps) => {
-	console.log(props);
 	const toast = createStandaloneToast();
 
 	return toast({

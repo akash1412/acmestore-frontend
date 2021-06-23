@@ -51,6 +51,11 @@ const SignIn: React.FC<{}> = () => {
 
 	const toast = useToastAPI();
 
+	const onSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		Login();
+	};
+
 	const Login = async (): Promise<void> => {
 		setShowSpinner(true);
 
@@ -108,7 +113,7 @@ const SignIn: React.FC<{}> = () => {
 			<Heading fontSize={["1.5rem", "2rem"]} mb='1rem'>
 				Login in to your account
 			</Heading>
-			<form style={{ marginTop: "1.4rem" }}>
+			<form style={{ marginTop: "1.4rem" }} onSubmit={onSubmit}>
 				<Stack direction='column' spacing='2rem' fontSize={["1rem", "1.2rem"]}>
 					<FormControl>
 						<FormLabel fontWeight='semibold'>Email address</FormLabel>
@@ -132,6 +137,7 @@ const SignIn: React.FC<{}> = () => {
 					</FormControl>
 
 					<Button
+						type='submit'
 						px='2rem'
 						bgColor='black'
 						color='white'
@@ -142,9 +148,10 @@ const SignIn: React.FC<{}> = () => {
 							border: "1.2px solid black",
 						}}
 						opacity={showSpinner ? ".7" : "1"}
-						onClick={Login}
-						onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {}}>
-						{showSpinner ? <Spinner size='sm' /> : "Sign In"}
+						isLoading={showSpinner}
+						loadingText='loging in...'
+						spinner={<Spinner size='sm' />}>
+						Sign In
 					</Button>
 				</Stack>
 			</form>

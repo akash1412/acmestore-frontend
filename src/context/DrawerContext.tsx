@@ -1,16 +1,14 @@
 import React from "react";
-import { CartItems, CartItem } from "../Interface/Interface";
-import { saveItemToCart, deleteItemFromCart } from "../utils/helper";
+import { CartItems, CartItem, newCartItem } from "../Interface/Interface";
+import {
+	saveItemToCart,
+	deleteItemFromCart,
+	totalAmount,
+} from "../utils/helper";
 import { useAuthContext } from "./AuthContext";
 import useToastAPI from "./../hooks/useToastAPI";
 import axios from "./../API/API";
 
-interface newCartItem {
-	itemID: string;
-	title: string;
-	price: number;
-	image: string;
-}
 interface CreateContext {
 	openDrawer: boolean;
 	toggleDrawer: () => void;
@@ -18,6 +16,7 @@ interface CreateContext {
 	handleActiveTab: (v: string) => void;
 	allCartItems: CartItems;
 	addItemToCart: (item: any) => void;
+	addingItemToCart: boolean;
 	removeItemFromCart: (item: CartItem) => void;
 }
 
@@ -28,6 +27,7 @@ const DrawerContext = React.createContext<CreateContext>({
 	handleActiveTab: value => {},
 	allCartItems: [],
 	addItemToCart: item => {},
+	addingItemToCart: false,
 	removeItemFromCart: item => {},
 });
 
@@ -42,9 +42,17 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 
 	const [allCartItems, setCartItems] = React.useState<CartItems>([]);
 
+	const [addingItemToCart, setAddingItemToCart] =
+		React.useState<boolean>(false);
+
+	const [deletingCartItem, setDeletingCartItem] =
+		React.useState<boolean>(false);
+
 	const { user } = useAuthContext();
 
 	const toast = useToastAPI();
+
+	console.log(totalAmount(allCartItems));
 
 	React.useEffect(() => {
 		if (user?.token) {
@@ -86,6 +94,7 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 		}
 
 		try {
+			setAddingItemToCart(true);
 			const res = await axios({
 				url: "/cart",
 				method: "POST",
@@ -95,10 +104,11 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 				data: newItem,
 			});
 
-			// console.log(res.data.data.item);
+			const { item } = res.data.data;
 
-			// setCartItems(saveItemToCart(newItem, allCartItems));
+			setCartItems(saveItemToCart(item, allCartItems));
 
+			setAddingItemToCart(false);
 			toast({
 				title: "Item added to Cart",
 				duration: 1000,
@@ -114,16 +124,35 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 				status: "error",
 			});
 		}
-
-		// if (!token) {
-		// 	// toggleModal();
-		// } else {
-		// 	setCartItems([newItem, ...allCartItems]);
-		// }
 	};
 
-	const removeItemFromCart = (item: CartItem) => {
-		setCartItems(deleteItemFromCart(item, allCartItems));
+	const removeItemFromCart = async (item: CartItem) => {
+		try {
+			await axios({
+				url: `/cart/${item.id}`,
+				headers: {
+					authorization: `Bearer ${user?.token}`,
+				},
+				method: "DELETE",
+			});
+			setCartItems(deleteItemFromCart(item, allCartItems));
+
+			toast({
+				title: "Item deleted from cart",
+				duration: 1000,
+				isClosable: true,
+				status: "success",
+			});
+		} catch (error) {
+			console.log(error.response);
+			toast({
+				title: "something went wrong",
+				description: "Try again later.",
+				duration: 1000,
+				isClosable: true,
+				status: "error",
+			});
+		}
 	};
 
 	return (
@@ -134,6 +163,7 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 				activeDrawerTab,
 				handleActiveTab,
 				allCartItems,
+				addingItemToCart,
 				addItemToCart,
 				removeItemFromCart,
 			}}>

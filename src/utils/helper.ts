@@ -1,4 +1,4 @@
-import { CartItem as ICartItem } from "../Interface/Interface";
+import { CartItem, CartItems } from "../Interface/Interface";
 
 export const CapitalizeLetter = (string: string) => {
 	const [FirstLetter, ...restLetter] = string.split("");
@@ -7,8 +7,8 @@ export const CapitalizeLetter = (string: string) => {
 };
 
 export const saveItemToCart = (
-	newItemToAdd: ICartItem,
-	CartItems: ICartItem[]
+	newItemToAdd: CartItem,
+	CartItems: CartItems
 ) => {
 	const existingCartItem = CartItems.find(
 		cartItem => cartItem.id === newItemToAdd.id
@@ -26,8 +26,8 @@ export const saveItemToCart = (
 };
 
 export const deleteItemFromCart = (
-	itemToRemove: ICartItem,
-	CartItems: ICartItem[]
+	itemToRemove: CartItem,
+	CartItems: CartItems
 ) => {
 	const getItemToRemoveFromCart = CartItems.find(
 		cartItem => cartItem.id === itemToRemove.id
@@ -36,7 +36,7 @@ export const deleteItemFromCart = (
 	console.log(getItemToRemoveFromCart?.quantity > 1);
 
 	if (getItemToRemoveFromCart?.quantity > 1) {
-		return CartItems.map((cartItem: ICartItem) => {
+		return CartItems.map((cartItem: CartItem) => {
 			return cartItem.id === itemToRemove.id
 				? { ...cartItem, quantity: cartItem.quantity - 1 }
 				: cartItem;
@@ -44,6 +44,12 @@ export const deleteItemFromCart = (
 	}
 
 	return CartItems.filter(
-		(cartItem: ICartItem) => cartItem.id !== itemToRemove.id
+		(cartItem: CartItem) => cartItem.id !== itemToRemove.id
 	);
 };
+
+export const totalAmount = (allCartItems: CartItems) =>
+	allCartItems.reduce(
+		(acc, item: CartItem) => item.price * item.quantity + acc,
+		0
+	);

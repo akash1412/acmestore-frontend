@@ -76,7 +76,7 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 
 			setUser(null);
 
-			history.push("/");
+			window.location.reload();
 		} catch (error) {
 			console.log(error.response);
 		}

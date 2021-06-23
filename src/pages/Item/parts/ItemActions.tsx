@@ -2,22 +2,32 @@ import { FC } from "react";
 import { Box, Button, Icon, Spinner } from "@chakra-ui/react";
 import { AiOutlineEdit, AiOutlineShopping } from "react-icons/ai";
 import { IoTrashBinOutline } from "react-icons/io5";
+import { CartItem, newCartItem } from "../../../Interface/Interface";
+import { useContext } from "react";
+import { useDrawerContext } from "../../../context/DrawerContext";
+import { Item } from "./../../../Interface/Interface";
 
 interface Props {
+	data: any;
 	role: string | undefined;
 	handleDeleteItemAction: () => void;
 	deletingItem: boolean;
-	handleAddToCartItemAction: () => void;
 }
 
 const ItemActions: FC<Props> = ({
+	data,
 	role,
 	handleDeleteItemAction,
 	deletingItem,
-	handleAddToCartItemAction,
 }) => {
+	const { addItemToCart, addingItemToCart } = useDrawerContext();
+
 	return (
-		<Box mt={["1rem", "1rem", "auto"]} d='flex'>
+		<Box
+			w='100%'
+			mt={["1rem", "1rem", "auto"]}
+			d='flex'
+			justifyContent={["center", "center", "flex-start"]}>
 			{role === "admin" ? (
 				<>
 					<Button
@@ -65,8 +75,20 @@ const ItemActions: FC<Props> = ({
 						boxShadow='md'
 						_hover={{ bgColor: "black" }}
 						_active={{ bgColor: "black" }}
-						onClick={handleAddToCartItemAction}>
-						<Icon as={AiOutlineShopping} w='1.4rem' h='1.4rem' />
+						opacity={addingItemToCart ? ".8" : "1"}
+						onClick={() =>
+							addItemToCart({
+								itemID: data._id,
+								title: data.title,
+								price: data.price,
+								image: data.image,
+							})
+						}>
+						{!addingItemToCart ? (
+							<Icon as={AiOutlineShopping} w='1.4rem' h='1.4rem' />
+						) : (
+							<Spinner size='sm' />
+						)}
 					</Button>
 					<Button
 						w='8rem'

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Heading, Icon, Image } from "@chakra-ui/react";
+import { Box, Heading, Image } from "@chakra-ui/react";
 import { CartItem as ICartItem } from "../../Interface/Interface";
 import CartItem from "./../CartItem/CartItem";
 import { useDrawerContext } from "../../context/DrawerContext";
@@ -13,11 +13,11 @@ const Cart: FC<Props> = ({ cartItems }) => {
 	const { removeItemFromCart } = useDrawerContext();
 
 	return (
-		<Box w='100%' h='100%' d='grid'>
+		<Box pos='absolute' zIndex='1' overflow='scroll' w='100%' h='100%' d='grid'>
 			{cartItems.length === 0 ? (
 				<EmptyCartUI />
 			) : (
-				<Box>
+				<Box d='flex' flexDirection='column'>
 					{cartItems.map((item: ICartItem) => (
 						<CartItem
 							key={item.id}
