@@ -12,7 +12,9 @@ import Menu from "../Menu/Menu";
 const NavbarOptions: React.FC<{}> = () => {
 	const { user } = useAuthContext();
 	const { location } = useHistory();
-	const { toggleDrawer, openDrawer } = useDrawerContext();
+	const { toggleDrawer } = useDrawerContext();
+
+	console.log(user);
 
 	return (
 		<Box alignSelf='center' justifySelf='flex-end' d='flex' alignItems='center'>

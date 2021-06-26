@@ -8,6 +8,7 @@ import {
 	FormControl,
 	Input,
 	FormLabel,
+	FormErrorMessage,
 	Spinner,
 	Stack,
 	Heading,
@@ -19,58 +20,47 @@ import PasswordInput from "../PasswordInput/PasswordInput";
 import useToastAPI from "./../../hooks/useToastAPI";
 import Button from "../button/button";
 
-interface User {
-	name: string;
-	role: string;
-	token: string;
-}
+import { Form, Formik, FormikProps, Field, FormikHelpers } from "formik";
+import * as Yup from "yup";
 
-interface Input {
+interface values {
 	email: string;
 	password: string;
 }
 
+const validationSchema = Yup.object().shape({
+	email: Yup.string().email("Invalid email").required(),
+	password: Yup.string()
+		.required("please enter your password")
+		.min(8, "Password length must be minimum of 8 characters")
+		.max(25, "Password length shall not excced than 25 characters "),
+});
+
 const SignIn: React.FC<{}> = () => {
 	const { handleAuthState } = useAuthContext();
 
-	const [inputs, setInputs] = React.useState<Input>({
-		email: "",
-		password: "",
-	});
-
-	const [formError, setFormError] = React.useState<null | string>(null);
-
-	const [showSpinner, setShowSpinner] = React.useState<boolean>(false);
-
 	const history = useHistory();
-
-	const handleInputChange = (e: any) => {
-		const { name, value } = e.target;
-		setInputs({ ...inputs, [name]: value });
-	};
 
 	const toast = useToastAPI();
 
-	const onSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		Login();
-	};
-
-	const Login = async (): Promise<void> => {
-		setShowSpinner(true);
+	const Login = async (
+		values: { email: string; password: string },
+		actions: FormikHelpers<{ email: string; password: string }>
+	) => {
+		actions.setSubmitting(true);
 
 		try {
 			const res = await axios({
 				url: "/users/login",
 				method: "POST",
-				data: inputs,
+				data: values,
 			});
 			const {
 				token,
 				data: { user },
 			} = res.data;
 			handleAuthState({ ...user, token });
-
+			actions.resetForm();
 			history.push("/");
 		} catch (error) {
 			const title: string = error.response.data.message;
@@ -81,8 +71,7 @@ const SignIn: React.FC<{}> = () => {
 				status: "error",
 			});
 		} finally {
-			setInputs({ email: "", password: "" });
-			setShowSpinner(false);
+			actions.setSubmitting(false);
 		}
 	};
 
@@ -113,48 +102,76 @@ const SignIn: React.FC<{}> = () => {
 			<Heading fontSize={["1.5rem", "2rem"]} mb='1rem'>
 				Login in to your account
 			</Heading>
-			<form style={{ marginTop: "1.4rem" }} onSubmit={onSubmit}>
-				<Stack direction='column' spacing='2rem' fontSize={["1rem", "1.2rem"]}>
-					<FormControl>
-						<FormLabel fontWeight='semibold'>Email address</FormLabel>
-						<Input
-							borderRadius='none'
-							name='email'
-							value={inputs.email}
-							isRequired
-							onChange={handleInputChange}
-							placeholder='Email'
-						/>
-					</FormControl>
+			<Formik
+				initialValues={{
+					email: "",
+					password: "",
+				}}
+				onSubmit={(values, actions) => Login(values, actions)}
+				validationSchema={validationSchema}>
+				{({
+					values,
+					handleChange,
+					errors,
 
-					<FormControl>
-						<FormLabel fontWeight='semibold'>Password</FormLabel>
-						<PasswordInput
-							name='password'
-							value={inputs.password}
-							onChange={handleInputChange}
-						/>
-					</FormControl>
+					isSubmitting,
+				}: FormikProps<values>) => (
+					<Form>
+						<Stack
+							direction='column'
+							spacing='2rem'
+							fontSize={["1rem", "1.2rem"]}>
+							<Field name='email'>
+								{({ field, form }: any) => (
+									<FormControl
+										isInvalid={form.errors.email && form.touched.email}>
+										<FormLabel fontWeight='semibold'>Email address</FormLabel>
+										<Input
+											{...field}
+											borderRadius='none'
+											name='email'
+											value={values.email}
+											isRequired
+											onChange={handleChange}
+											placeholder='Email'
+										/>
+										<FormErrorMessage>{errors.email}</FormErrorMessage>
+									</FormControl>
+								)}
+							</Field>
 
-					<Button
-						type='submit'
-						px='2rem'
-						bgColor='black'
-						color='white'
-						border='1.2px solid black'
-						_hover={{
-							bgColor: "white",
-							color: "black",
-							border: "1.2px solid black",
-						}}
-						opacity={showSpinner ? ".7" : "1"}
-						isLoading={showSpinner}
-						loadingText='loging in...'
-						spinner={<Spinner size='sm' />}>
-						Sign In
-					</Button>
-				</Stack>
-			</form>
+							<Field name='password'>
+								{({ field, form }: any) => (
+									<FormControl
+										isInvalid={form.errors.password && form.touched.password}>
+										<FormLabel fontWeight='semibold'>Password</FormLabel>
+										<PasswordInput {...field} />
+										<FormErrorMessage>{errors.password}</FormErrorMessage>
+									</FormControl>
+								)}
+							</Field>
+
+							<Button
+								type='submit'
+								px='2rem'
+								bgColor='black'
+								color='white'
+								border='1.2px solid black'
+								_hover={{
+									bgColor: "white",
+									color: "black",
+									border: "1.2px solid black",
+								}}
+								opacity={isSubmitting ? ".7" : "1"}
+								isLoading={isSubmitting}
+								loadingText='loging in...'
+								spinner={<Spinner size='sm' />}>
+								Sign In
+							</Button>
+						</Stack>
+					</Form>
+				)}
+			</Formik>
 
 			<GoogleLoginBtn
 				clientId='363929442264-d4fn1djchejclqrkcv28uqd04jnq1gpd.apps.googleusercontent.com'

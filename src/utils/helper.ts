@@ -53,3 +53,7 @@ export const totalAmount = (allCartItems: CartItems) =>
 		(acc, item: CartItem) => item.price * item.quantity + acc,
 		0
 	);
+
+
+
+	
