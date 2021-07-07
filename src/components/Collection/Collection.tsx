@@ -1,9 +1,9 @@
-import React from "react";
-import { Grid, Box } from "@chakra-ui/react";
-import Card from "../Card/Card";
-import { motion } from "framer-motion";
+import React from 'react';
+import { Grid, Box } from '@chakra-ui/react';
+import Card from '../Card/Card';
+import { motion } from 'framer-motion';
 
-import { Item } from "../../Interface/Interface";
+import { Item } from '../../Interface/Interface';
 
 interface CollectionProps {
 	/** expects array of store items */
@@ -21,14 +21,14 @@ const Collection: React.FC<CollectionProps> = ({ items = [] }): JSX.Element => {
 			<Grid
 				justifyContent='center'
 				gridTemplateColumns={[
-					"repeat(1,1fr)",
-					"repeat(2,1fr)",
-					"repeat(2,1fr)",
-					"repeat(4,1fr)",
+					'repeat(1,1fr)',
+					'repeat(2,1fr)',
+					'repeat(2,1fr)',
+					'repeat(3,1fr)',
 				]}
 				gridAutoRows='1fr'
 				gridGap='1.5rem'
-				gridRowGap={["2rem"]}
+				gridRowGap={['2rem']}
 				justifyItems='center'>
 				{items.map(item => (
 					<Card key={item._id} {...item} />

@@ -1,8 +1,8 @@
-import React from "react";
-import axios from "../../API/API";
+import React from 'react';
+import axios from '../../API/API';
 
-import { FcGoogle } from "react-icons/fc";
-import { useHistory } from "react-router-dom";
+import { FcGoogle } from 'react-icons/fc';
+import { useHistory } from 'react-router-dom';
 import {
 	Flex,
 	FormControl,
@@ -13,15 +13,15 @@ import {
 	Stack,
 	Heading,
 	Icon,
-} from "@chakra-ui/react";
-import GoogleLoginBtn from "react-google-login";
-import { useAuthContext } from "../../context/AuthContext";
-import PasswordInput from "../PasswordInput/PasswordInput";
-import useToastAPI from "./../../hooks/useToastAPI";
-import Button from "../button/button";
+} from '@chakra-ui/react';
+import GoogleLoginBtn from 'react-google-login';
+import { useAuthContext } from '../../context/AuthContext';
+import PasswordInput from '../PasswordInput/PasswordInput';
+import useToastAPI from './../../hooks/useToastAPI';
+import Button from '../button/button';
 
-import { Form, Formik, FormikProps, Field, FormikHelpers } from "formik";
-import * as Yup from "yup";
+import { Form, Formik, FormikProps, Field, FormikHelpers } from 'formik';
+import * as Yup from 'yup';
 
 interface values {
 	email: string;
@@ -29,11 +29,11 @@ interface values {
 }
 
 const validationSchema = Yup.object().shape({
-	email: Yup.string().email("Invalid email").required(),
+	email: Yup.string().email('Invalid email').required(),
 	password: Yup.string()
-		.required("please enter your password")
-		.min(8, "Password length must be minimum of 8 characters")
-		.max(25, "Password length shall not excced than 25 characters "),
+		.required('please enter your password')
+		.min(8, 'Password length must be minimum of 8 characters')
+		.max(25, 'Password length shall not excced than 25 characters '),
 });
 
 const SignIn: React.FC<{}> = () => {
@@ -51,8 +51,8 @@ const SignIn: React.FC<{}> = () => {
 
 		try {
 			const res = await axios({
-				url: "/users/login",
-				method: "POST",
+				url: '/users/login',
+				method: 'POST',
 				data: values,
 			});
 			const {
@@ -61,14 +61,14 @@ const SignIn: React.FC<{}> = () => {
 			} = res.data;
 			handleAuthState({ ...user, token });
 			actions.resetForm();
-			history.push("/");
+			history.push('/');
 		} catch (error) {
 			const title: string = error.response.data.message;
 			toast({
 				title: title,
 				duration: 500,
 				isClosable: true,
-				status: "error",
+				status: 'error',
 			});
 		} finally {
 			actions.setSubmitting(false);
@@ -79,9 +79,9 @@ const SignIn: React.FC<{}> = () => {
 		console.log(res);
 
 		toast({
-			title: "logged in successfully",
+			title: 'logged in successfully',
 			duration: 1000,
-			status: "success",
+			status: 'success',
 			isClosable: true,
 		});
 	};
@@ -98,14 +98,14 @@ const SignIn: React.FC<{}> = () => {
 	};
 
 	return (
-		<Flex flexDir='column' w={["100%", "25rem", "25rem"]}>
-			<Heading fontSize={["1.5rem", "2rem"]} mb='1rem'>
+		<Flex flexDir='column' w={['100%', '25rem', '25rem']}>
+			<Heading fontSize={['1.5rem', '2rem']} mb='1rem'>
 				Login in to your account
 			</Heading>
 			<Formik
 				initialValues={{
-					email: "",
-					password: "",
+					email: '',
+					password: '',
 				}}
 				onSubmit={(values, actions) => Login(values, actions)}
 				validationSchema={validationSchema}>
@@ -120,7 +120,7 @@ const SignIn: React.FC<{}> = () => {
 						<Stack
 							direction='column'
 							spacing='2rem'
-							fontSize={["1rem", "1.2rem"]}>
+							fontSize={['1rem', '1.2rem']}>
 							<Field name='email'>
 								{({ field, form }: any) => (
 									<FormControl
@@ -129,10 +129,7 @@ const SignIn: React.FC<{}> = () => {
 										<Input
 											{...field}
 											borderRadius='none'
-											name='email'
-											value={values.email}
 											isRequired
-											onChange={handleChange}
 											placeholder='Email'
 										/>
 										<FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -158,11 +155,11 @@ const SignIn: React.FC<{}> = () => {
 								color='white'
 								border='1.2px solid black'
 								_hover={{
-									bgColor: "white",
-									color: "black",
-									border: "1.2px solid black",
+									bgColor: 'white',
+									color: 'black',
+									border: '1.2px solid black',
 								}}
-								opacity={isSubmitting ? ".7" : "1"}
+								opacity={isSubmitting ? '.7' : '1'}
 								isLoading={isSubmitting}
 								loadingText='loging in...'
 								spinner={<Spinner size='sm' />}>
@@ -183,8 +180,8 @@ const SignIn: React.FC<{}> = () => {
 						boxShadow='md'
 						bgColor='#000000'
 						color='#fff'
-						_hover={{ bgColor: "#000000" }}
-						_active={{ bgColor: "#000000" }}
+						_hover={{ bgColor: '#000000' }}
+						_active={{ bgColor: '#000000' }}
 						leftIcon={<Icon as={FcGoogle} />}>
 						Login with Google
 					</Button>

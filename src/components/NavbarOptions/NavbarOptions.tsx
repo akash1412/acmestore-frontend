@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 
-import { Box, Link as LinkUI, Avatar, Icon } from "@chakra-ui/react";
-import { useAuthContext } from "../../context/AuthContext";
-import { useHistory } from "react-router-dom";
-import { AiOutlineShopping } from "react-icons/ai";
-import AvatarPlaceholder from "../../assests/images/avatar-placeholder.jpg";
+import { Box, Link as LinkUI, Avatar, Icon } from '@chakra-ui/react';
+import { useAuthContext } from '../../context/AuthContext';
+import { useHistory } from 'react-router-dom';
+import { AiOutlineShopping } from 'react-icons/ai';
+import AvatarPlaceholder from '../../assets/images/avatar-placeholder.jpg';
 
-import { useDrawerContext } from "../../context/DrawerContext";
-import Menu from "../Menu/Menu";
+import { useDrawerContext } from '../../context/DrawerContext';
+import Menu from '../Menu/Menu';
 
 const NavbarOptions: React.FC<{}> = () => {
 	const { user } = useAuthContext();
@@ -18,26 +18,26 @@ const NavbarOptions: React.FC<{}> = () => {
 
 	return (
 		<Box alignSelf='center' justifySelf='flex-end' d='flex' alignItems='center'>
-			<Box mr={[".8rem", "1rem"]} onClick={toggleDrawer}>
+			<Box mr={['.8rem', '1rem']} onClick={toggleDrawer}>
 				<Icon as={AiOutlineShopping} fontSize='1.2rem' cursor='pointer' />
 			</Box>
-			{user?.role === "admin" && (
+			{user?.role === 'admin' && (
 				<LinkUI
-					href='/add'
-					mr={[".8rem", "1rem"]}
+					href='/create'
+					mr={['.8rem', '1rem']}
 					fontWeight='bold'
 					textDecoration='none'>
-					add
+					create
 				</LinkUI>
 			)}
 
-			{!user && location.pathname !== "/auth" && (
-				<LinkUI mr={[".8rem", "1rem"]} href='/auth'>
+			{!user && location.pathname !== '/auth' && (
+				<LinkUI mr={['.8rem', '1rem']} href='/auth'>
 					login
 				</LinkUI>
 			)}
 
-			<Menu src={user?.photo || AvatarPlaceholder} name={user?.name || ""} />
+			<Menu src={user?.photo || AvatarPlaceholder} name={user?.name || ''} />
 		</Box>
 	);
 };

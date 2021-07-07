@@ -1,5 +1,5 @@
-import React from "react";
-import { AiOutlineRight } from "react-icons/ai";
+import React from 'react';
+import { AiOutlineRight } from 'react-icons/ai';
 import {
 	Drawer,
 	DrawerBody,
@@ -13,10 +13,10 @@ import {
 	Button,
 	Heading,
 	Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import Cart from "../Cart/Cart";
-import { useDrawerContext } from "./../../context/DrawerContext";
+import Cart from '../Cart/Cart';
+import { useDrawerContext } from './../../context/DrawerContext';
 // import Button from "./../button/button";
 
 const DrawerContainer = () => {
@@ -32,56 +32,25 @@ const DrawerContainer = () => {
 		<Drawer
 			isOpen={openDrawer}
 			placement='right'
-			size='md'
+			size={'md'}
 			onClose={toggleDrawer}>
 			<DrawerOverlay />
-			<DrawerContent pos='relative'>
+			<DrawerContent>
 				<DrawerCloseButton />
 
-				<DrawerHeader fontWeight='bold' textAlign='center' fontSize='2rem'>
-					{activeDrawerTab === "cart" ? "Your Bag" : "Your liked products"}
+				<DrawerHeader
+					fontWeight='bold'
+					h='100vh'
+					textAlign='center'
+					fontSize={['1.5rem', '2rem']}>
+					{activeDrawerTab === 'cart' ? 'Your Bag' : 'Your liked products'}
 				</DrawerHeader>
 
-				<DrawerBody px={["14px", "24px"]}>
+				<DrawerBody px={['14px', '24px']} pos='relative'>
 					<Cart cartItems={allCartItems} />
 				</DrawerBody>
-				<DrawerFooter
-					bgColor='#fff'
-					zIndex='4'
-					pos='fixed'
-					bottom='0'
-					w='100%'
-					d='flex'
-					flexDir='column'
-					alignItems='center'
-					justifyContent='center'>
-					<Box alignSelf='start'>
-						<Heading size='md' color='#ccc'>
-							Total:
-						</Heading>
-						<Text fontWeight='bold' fontSize='1.4rem'>
-							${(5000).toFixed(2)}
-						</Text>
-					</Box>
-					<Button
-						w='15rem'
-						py='1.8rem'
-						bgColor='#f9c74f'
-						_hover={{
-							bgColor: "#ffba08",
-						}}
-						_active={{
-							bgColor: "#ffba08",
-						}}
-						borderRadius='2rem'
-						fontWeight='bold'
-						fontSize='1rem'
-						leftIcon={
-							<Icon fontWeight='bold' fontSize='1rem' as={AiOutlineRight} />
-						}
-						iconSpacing='2.5rem'>
-						CHECKOUT
-					</Button>
+				<DrawerFooter pos='relative'>
+					<Footer />
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
@@ -89,3 +58,44 @@ const DrawerContainer = () => {
 };
 
 export default DrawerContainer;
+
+function Footer() {
+	return (
+		<Box
+			w='100%'
+			zIndex='4'
+			d='flex'
+			flexDir='column'
+			alignItems='center'
+			justifyContent='center'>
+			<Box alignSelf='start'>
+				<Heading size='md' color='#ccc'>
+					Total:
+				</Heading>
+				<Text fontWeight='bold' fontSize='1.4rem'>
+					${(5000).toFixed(2)}
+				</Text>
+			</Box>
+			<Button
+				maxW='15rem'
+				py='1.5rem'
+				px='1rem'
+				bgColor='#f9c74f'
+				_hover={{
+					bgColor: '#ffba08',
+				}}
+				_active={{
+					bgColor: '#ffba08',
+				}}
+				borderRadius='2rem'
+				fontWeight='bold'
+				fontSize='1rem'
+				leftIcon={
+					<Icon fontWeight='bold' fontSize='1rem' as={AiOutlineRight} />
+				}
+				iconSpacing='2rem'>
+				CHECKOUT
+			</Button>
+		</Box>
+	);
+}

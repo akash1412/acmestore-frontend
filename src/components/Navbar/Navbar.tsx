@@ -1,7 +1,7 @@
-import React from "react";
-import { Flex, Heading } from "@chakra-ui/react";
+import React from 'react';
+import { Flex, Heading } from '@chakra-ui/react';
 
-import NavbarOptions from "../NavbarOptions/NavbarOptions";
+import NavbarOptions from '../NavbarOptions/NavbarOptions';
 
 const Navbar: React.FC<{
 	toggleSidebar: () => void;
@@ -14,12 +14,12 @@ const Navbar: React.FC<{
 			zIndex='5'
 			h='4.5rem'
 			w='100%'
-			px={["1rem", "1.4rem"]}
+			px={['1rem', '1.4rem']}
 			alignItems='center'
 			justifyContent='space-between'
 			boxShadow='md'>
 			<Flex>
-				<Heading size='md'>L</Heading>
+				<Heading size='md'>ACME</Heading>
 			</Flex>
 
 			<NavbarOptions />

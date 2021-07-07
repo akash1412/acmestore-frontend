@@ -1,11 +1,10 @@
-import { FC } from "react";
-import { Box, Button, Icon, Spinner } from "@chakra-ui/react";
-import { AiOutlineEdit, AiOutlineShopping } from "react-icons/ai";
-import { IoTrashBinOutline } from "react-icons/io5";
-import { CartItem, newCartItem } from "../../../Interface/Interface";
-import { useContext } from "react";
-import { useDrawerContext } from "../../../context/DrawerContext";
-import { Item } from "./../../../Interface/Interface";
+import { FC } from 'react';
+import { Box, Button, Icon, Spinner } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
+import { AiOutlineEdit, AiOutlineShopping } from 'react-icons/ai';
+import { IoTrashBinOutline } from 'react-icons/io5';
+// import { CartItem, newCartItem } from '../../../Interface/Interface';
+import { useDrawerContext } from '../../../context/DrawerContext';
 
 interface Props {
 	data: any;
@@ -22,48 +21,51 @@ const ItemActions: FC<Props> = ({
 }) => {
 	const { addItemToCart, addingItemToCart } = useDrawerContext();
 
+	const history = useHistory();
+
 	return (
 		<Box
 			w='100%'
-			mt={["1rem", "1rem", "auto"]}
+			mt={['1rem', '1rem', 'auto']}
 			d='flex'
-			justifyContent={["center", "center", "flex-start"]}>
-			{role === "admin" ? (
+			justifyContent={['center', 'center', 'flex-start']}>
+			{role === 'admin' ? (
 				<>
 					<Button
 						mr='1.2rem'
 						border='none'
-						borderRadius='none'
 						px='3rem'
 						bgColor='black'
 						_hover={{
-							bgColor: "black",
+							bgColor: 'black',
 						}}
 						_active={{
-							bgColor: "black",
+							bgColor: 'black',
 						}}
-						// onClick={() =>(`/edit/${data.slug}`)}
-					>
-						<Icon as={AiOutlineEdit} fontSize='1.2rem' color='#fff' />
+						color='#fff'
+						leftIcon={
+							<Icon as={AiOutlineEdit} fontSize='1.2rem' color='#fff' />
+						}
+						iconSpacing='1rem'
+						onClick={() => history.push(`/edit/item/${data.slug}`)}>
+						Edit
 					</Button>
 					<Button
 						border='none'
-						borderRadius='none'
 						px='3rem'
 						bgColor='red.500'
 						_active={{
-							bgColor: "red.500",
+							bgColor: 'red.500',
 						}}
 						_hover={{
-							bgColor: "red.500",
+							bgColor: 'red.500',
 						}}
-						onClick={handleDeleteItemAction}>
-						{deletingItem ? (
-							<Spinner color='#fff' />
-						) : (
+						onClick={handleDeleteItemAction}
+						leftIcon={
 							<Icon as={IoTrashBinOutline} fontSize='1.2rem' color='#fff' />
-						)}
-					</Button>
+						}
+						isLoading={deletingItem}
+						spinner={<Spinner color='#fff' size='sm' />}></Button>
 				</>
 			) : (
 				<>
@@ -73,9 +75,9 @@ const ItemActions: FC<Props> = ({
 						color='#fff'
 						border='1.5px solid transparent'
 						boxShadow='md'
-						_hover={{ bgColor: "black" }}
-						_active={{ bgColor: "black" }}
-						opacity={addingItemToCart ? ".8" : "1"}
+						_hover={{ bgColor: 'black' }}
+						_active={{ bgColor: 'black' }}
+						opacity={addingItemToCart ? '.8' : '1'}
 						onClick={() =>
 							addItemToCart({
 								itemID: data._id,
@@ -98,8 +100,8 @@ const ItemActions: FC<Props> = ({
 						boxShadow='md'
 						fontWeight='bold'
 						ml='2rem'
-						_hover={{ bgColor: "black", color: "#fff" }}
-						_active={{ bgColor: "black", color: "#fff" }}>
+						_hover={{ bgColor: 'black', color: '#fff' }}
+						_active={{ bgColor: 'black', color: '#fff' }}>
 						Buy Now
 					</Button>
 				</>

@@ -1,14 +1,14 @@
-import { FC, useState, useEffect } from "react";
-import { Box } from "@chakra-ui/react";
-import { BsArrowRight, BsArrowLeft } from "react-icons/bs";
-import useFetch from "../hooks/useFetch";
-import { RouteComponentProps } from "react-router-dom";
-import Collection from "../components/Collection/Collection";
+import { FC, useState, useEffect } from 'react';
+import { Box } from '@chakra-ui/react';
+import { BsArrowRight, BsArrowLeft } from 'react-icons/bs';
+// import useFetch from '../hooks/useFetch';
+import { RouteComponentProps } from 'react-router-dom';
+import Collection from '../components/Collection/Collection';
 
-import { ItemsLoading } from "../components/SkeletonScreens/SkeletonScreen";
-import Button from "../components/button/button";
-import { Item } from "../Interface/Interface";
-import axios from "../API/API";
+import { ItemsLoading } from '../components/SkeletonScreens/SkeletonScreen';
+import Button from '../components/button/button';
+import { Item } from '../Interface/Interface';
+import axios from '../API/API';
 
 interface Props extends RouteComponentProps<{ page: string }> {}
 
@@ -21,8 +21,9 @@ const Home: FC<Props> = ({ match, history }) => {
 
 	const [isLoading, setIsLoading] = useState(false);
 
-	const [data, setData] =
-		useState<{ total: number; items: Item[] } | null>(null);
+	const [data, setData] = useState<{ total: number; items: Item[] } | null>(
+		null
+	);
 
 	if (match.params) {
 		console.log(match);
@@ -31,8 +32,8 @@ const Home: FC<Props> = ({ match, history }) => {
 		setIsLoading(true);
 		function FETCH() {
 			axios({
-				url: `/store/?page=${history.location.search.split("=")[1] || 1}`,
-				method: "GET",
+				url: `/store/?page=${history.location.search.split('=')[1] || 1}`,
+				method: 'GET',
 			}).then(res => {
 				console.log(res);
 				setData(res.data.data);
@@ -54,17 +55,17 @@ const Home: FC<Props> = ({ match, history }) => {
 
 	return (
 		<Box
-			m={[0, "0 auto"]}
-			w={["100%", "70%"]}
+			m={[0, '0 auto']}
+			w={['100%', '50%']}
 			py='1rem'
-			px={[".5rem", "1.5rem"]}
+			px={['.5rem', '1.5rem']}
 			d='flex'
 			flexDir='column'>
 			<Collection items={data?.items} />
 
-			<Box mt='1rem' d='flex' justifyContent={["space-around", "center"]}>
+			<Box mt='1rem' d='flex' justifyContent={['space-around', 'center']}>
 				<Button
-					mr={[0, "1.5rem"]}
+					mr={[0, '1.5rem']}
 					bgColor='black'
 					colorScheme='ghost'
 					color='#fff'
@@ -72,8 +73,8 @@ const Home: FC<Props> = ({ match, history }) => {
 					leftIcon={<BsArrowLeft />}
 					onClick={() =>
 						history.push({
-							pathname: "/",
-							search: "page=1",
+							pathname: '/',
+							search: 'page=1',
 						})
 					}>
 					prev
@@ -91,3 +92,9 @@ const Home: FC<Props> = ({ match, history }) => {
 };
 
 export default Home;
+
+// sm: "30em", ==> 480px
+// md: "48em", ==> 768px
+// lg: "62em", ==> 992px
+// xl: "80em", ==> 1280px
+// "2xl": "96em", ==> 1536px

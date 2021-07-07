@@ -1,10 +1,10 @@
-import React from "react";
-import { Box, Icon } from "@chakra-ui/react";
-import Navbar from "../Navbar/Navbar";
-import { IoCaretDownCircleOutline } from "react-icons/io5";
-import ModalContextProvider from "../../context/ModalContext";
-import DrawerContainer from "../DrawerContainer/DrawerContainer";
-import DrawerContextProvider from "../../context/DrawerContext";
+import React from 'react';
+import { Box, Icon } from '@chakra-ui/react';
+import Navbar from '../Navbar/Navbar';
+import { IoCaretDownCircleOutline } from 'react-icons/io5';
+import ModalContextProvider from '../../context/ModalContext';
+import DrawerContainer from '../DrawerContainer/DrawerContainer';
+import DrawerContextProvider from '../../context/DrawerContext';
 
 interface MainCompProps {
 	children: string | React.ReactNode;
@@ -17,7 +17,6 @@ const Main: React.FC<MainCompProps> = ({ children }) => {
 		setOpenSidebar(prevState => !prevState);
 	};
 
-	console.log(openSidebar);
 	return (
 		<Box d='flex' flexDir='column'>
 			<DrawerContextProvider>
@@ -29,7 +28,7 @@ const Main: React.FC<MainCompProps> = ({ children }) => {
 						d='flex'
 						w='100%'
 						h='100%'
-						bgColor='#f1faee'>
+						bgColor='#faf9f9'>
 						{children}
 					</Box>
 				</Box>

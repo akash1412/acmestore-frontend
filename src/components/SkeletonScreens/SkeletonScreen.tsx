@@ -23,7 +23,7 @@ export const ItemsLoading = () => {
 				"repeat(1,1fr)",
 				"repeat(1,1fr)",
 				"repeat(2,1fr)",
-				"repeat(4,1fr)",
+				"repeat(3,1fr)",
 			]}
 			gridAutoRows='1fr'
 			gridGap='1rem'

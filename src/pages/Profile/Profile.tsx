@@ -1,14 +1,15 @@
-import { FC, useState, useEffect } from "react";
-import { Box, Avatar, Spinner, Input, FormLabel, Icon } from "@chakra-ui/react";
-import axios from "../../API/API";
-import AxiosAPI from "axios";
-import { useAuthContext } from "../../context/AuthContext";
+import { FC, useState, useEffect } from 'react';
+import { Box, Spinner } from '@chakra-ui/react';
+import axios from '../../API/API';
+import AxiosAPI from 'axios';
+import { useAuthContext } from '../../context/AuthContext';
 
-import ProfilePic from "./parts/ProfilePic";
-import CartItems from "./parts/CartItems";
-import ProfileDetails from "./parts/profileDetails";
-import { CartItem, IUpdateProfile } from "../../Interface/Interface";
-import useToastAPI from "./../../hooks/useToastAPI";
+import ProfilePic from './parts/ProfilePic';
+
+import ProfileDetails from './parts/profileDetails';
+import { CartItem, IUpdateProfile } from '../../Interface/Interface';
+import useToastAPI from './../../hooks/useToastAPI';
+import { RouteComponentProps } from 'react-router-dom';
 
 interface ICartItem extends CartItem {
 	itemID: string;
@@ -24,7 +25,7 @@ interface Profile {
 	cartItems: ICartItem[] | [];
 }
 
-const ProfilePage: FC<{}> = () => {
+const ProfilePage: FC<RouteComponentProps> = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [profile, setProfile] = useState<null | Profile>(null);
@@ -37,8 +38,8 @@ const ProfilePage: FC<{}> = () => {
 		setIsLoading(true);
 
 		axios({
-			url: "/users/me",
-			method: "GET",
+			url: '/users/me',
+			method: 'GET',
 			headers: {
 				authorization: `Bearer ${user?.token}`,
 			},
@@ -62,8 +63,8 @@ const ProfilePage: FC<{}> = () => {
 	const UpdateMe = async (data: IUpdateProfile) => {
 		try {
 			await AxiosAPI({
-				url: "https://ecom-api-v1.herokuapp.com/api/v1/users/updateMe",
-				method: "PATCH",
+				url: 'https://ecom-api-v1.herokuapp.com/api/v1/users/updateMe',
+				method: 'PATCH',
 				headers: {
 					authorization: `Bearer ${user?.token}`,
 				},
@@ -72,17 +73,17 @@ const ProfilePage: FC<{}> = () => {
 			updateUserOverviewData(data);
 
 			toast({
-				title: "proifle updated succesfully",
+				title: 'proifle updated succesfully',
 				duration: 800,
-				status: "success",
+				status: 'success',
 				isClosable: true,
 			});
 		} catch (error) {
 			toast({
-				title: "something went wrong",
-				description: "please try again later",
+				title: 'something went wrong',
+				description: 'please try again later',
 				duration: 800,
-				status: "error",
+				status: 'error',
 				isClosable: true,
 			});
 
@@ -92,14 +93,14 @@ const ProfilePage: FC<{}> = () => {
 
 	return (
 		<Box
-			px={["1rem", "2rem"]}
+			px={['1rem', '2rem']}
 			py='1rem'
 			w='100%'
 			h='100%'
 			d='flex'
 			justifyContent='center'>
 			<Box
-				w={["100%", "100%", "80%", "50%"]}
+				w={['100%', '100%', '80%', '50%']}
 				d='flex'
 				flexDir='column'
 				alignItems='center'>

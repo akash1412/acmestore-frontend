@@ -1,17 +1,15 @@
-import { FC, useState, useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { Box, Spinner, Icon } from "@chakra-ui/react";
-import { BsArrowLeft } from "react-icons/bs";
-import useToastAPI from "../../hooks/useToastAPI";
-import { Item as ItemScreen } from "../../components/SkeletonScreens/SkeletonScreen";
-import axios from "../../API/API";
-import { CartItem, Item, newCartItem } from "../../Interface/Interface";
-import { useAuthContext } from "../../context/AuthContext";
+import { FC, useState, useEffect } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { Box, Spinner, Icon } from '@chakra-ui/react';
+import { BsArrowLeft } from 'react-icons/bs';
+import useToastAPI from '../../hooks/useToastAPI';
 
-import { useDrawerContext } from "./../../context/DrawerContext";
+import axios from '../../API/API';
+import { Item } from '../../Interface/Interface';
+import { useAuthContext } from '../../context/AuthContext';
 
-import ItemContent from "./parts/ItemContent";
-import MetaHead from "../../components/MetaHead/MetaHead";
+import ItemContent from './parts/ItemContent';
+import MetaHead from '../../components/MetaHead/MetaHead';
 
 interface RouteProps {
 	slug: string;
@@ -50,27 +48,28 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 
 		axios({
 			url: `/store/${data?.slug}`,
-			method: "DELETE",
+			method: 'DELETE',
 		})
 			.then(() => {
 				toast({
-					title: "Item Deleted Successfully",
-					status: "success",
+					title: 'Item Deleted Successfully',
+					status: 'success',
 					duration: 2000,
 					isClosable: true,
 				});
 			})
 			.catch(() => {
 				toast({
-					title: "Something went wrong",
-					description: "Try Again Later",
-					status: "error",
+					title: 'Something went wrong',
+					description: 'Try Again Later',
+					status: 'error',
 					duration: 3000,
 					isClosable: true,
 				});
 			})
 			.finally(() => {
 				setDeletingItem(false);
+				history.push('/');
 			});
 	};
 
@@ -100,7 +99,7 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 				cursor='pointer'
 				onClick={() => history.goBack()}
 			/>
-			<Box my={["2rem", "4rem"]} d='flex' justifyContent='center'>
+			<Box my={['2rem', '4rem']} d='flex' justifyContent='center'>
 				<ItemContent
 					{...data}
 					role={user?.role}

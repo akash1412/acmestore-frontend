@@ -1,10 +1,9 @@
-import { FC, useState } from "react";
-import { Box, Icon, Avatar, FormLabel, Input } from "@chakra-ui/react";
-import { FiEdit2 } from "react-icons/fi";
-import AxiosAPI from "axios";
-import useToastAPI from "./../../../hooks/useToastAPI";
-import { useAuthContext } from "../../../context/AuthContext";
-import { useHistory } from "react-router-dom";
+import { FC, useState } from 'react';
+import { Box, Icon, Avatar, FormLabel, Input } from '@chakra-ui/react';
+import { FiEdit2 } from 'react-icons/fi';
+import AxiosAPI from 'axios';
+import useToastAPI from './../../../hooks/useToastAPI';
+import { useAuthContext } from '../../../context/AuthContext';
 
 interface Props {
 	name?: string;
@@ -28,28 +27,28 @@ const ProfilePic: FC<Props> = ({ name, photo }) => {
 		reader.readAsDataURL(file);
 
 		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("upload_preset", "x7azl0iw");
+		formData.append('file', file);
+		formData.append('upload_preset', 'x7azl0iw');
 
 		try {
-			AxiosAPI("https://api.cloudinary.com/v1_1/dhqp2dd6b/image/upload", {
-				method: "POST",
+			AxiosAPI('https://api.cloudinary.com/v1_1/dhqp2dd6b/image/upload', {
+				method: 'POST',
 				data: formData,
 			}).then(result => {
 				AxiosAPI({
-					url: "https://ecom-api-v1.herokuapp.com/api/v1/users/updateMe",
-					method: "PATCH",
+					url: 'https://ecom-api-v1.herokuapp.com/api/v1/users/updateMe',
+					method: 'PATCH',
 					headers: {
 						authorization: `Bearer ${
-							JSON.parse(window.localStorage.getItem("user")!).token
+							JSON.parse(window.localStorage.getItem('user')!).token
 						}`,
 					},
 					data: { photo: result.data.url },
 				}).then(() => {
 					toast({
-						title: "Profile Pic Updated Successfully",
+						title: 'Profile Pic Updated Successfully',
 
-						status: "success",
+						status: 'success',
 						isClosable: true,
 						duration: 800,
 					});
@@ -63,9 +62,9 @@ const ProfilePic: FC<Props> = ({ name, photo }) => {
 			console.log(error.response);
 
 			toast({
-				title: "something went wrong",
-				description: "please try again later.",
-				status: "error",
+				title: 'something went wrong',
+				description: 'please try again later.',
+				status: 'error',
 				isClosable: true,
 				duration: 800,
 			});

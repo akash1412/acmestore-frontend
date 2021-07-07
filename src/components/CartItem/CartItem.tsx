@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { CartItem as ICartItem } from "../../Interface/Interface";
-import { Box, Image, Heading, Text, Stack, Icon } from "@chakra-ui/react";
-import { IoIosClose } from "react-icons/io";
+import { FC } from 'react';
+import { CartItem as ICartItem } from '../../Interface/Interface';
+import { Box, Image, Heading, Text, Stack, Icon } from '@chakra-ui/react';
+import { IoIosClose } from 'react-icons/io';
 
 import {
 	NumberInput,
@@ -9,7 +9,7 @@ import {
 	NumberInputStepper,
 	NumberIncrementStepper,
 	NumberDecrementStepper,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 interface Props extends ICartItem {
 	removeItemFromCart: (item: ICartItem) => void;
@@ -28,9 +28,9 @@ const CartItem: FC<Props> = props => {
 	} = props;
 
 	return (
-		<Box d='flex' maxW='70%' justifyContent='flex-start' mb='2rem'>
-			<Box w='5rem' h='6rem' borderRadius='.6rem' mr='1rem' overflow='hidden'>
-				<Image w='100%' h='100%' objectFit='fill' src={image} alt={title} />
+		<Box d='flex' w='100%' justifyContent='flex-start' mb='2rem'>
+			<Box w='5rem' h='5rem' borderRadius='.4rem' mr='1rem' overflow='hidden'>
+				<Image w='100%' h='100%' objectFit='cover' src={image} alt={title} />
 			</Box>
 
 			<Stack flexDir='column' justifyContent='space-between' flexGrow={1}>
