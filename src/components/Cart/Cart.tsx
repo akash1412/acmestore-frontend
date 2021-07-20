@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Cart: FC<Props> = ({ cartItems }) => {
-	const { removeItemFromCart } = useDrawerContext();
+	const { updateItemQuantity, deleteItemFromCart } = useDrawerContext();
 
 	return (
 		<Box zIndex='1' w='100%' h='100%' d='grid'>
@@ -22,7 +22,8 @@ const Cart: FC<Props> = ({ cartItems }) => {
 						<CartItem
 							key={item.id}
 							{...item}
-							removeItemFromCart={removeItemFromCart}
+							updateItemQuantity={updateItemQuantity}
+							deleteItem={deleteItemFromCart}
 						/>
 					))}
 				</Box>

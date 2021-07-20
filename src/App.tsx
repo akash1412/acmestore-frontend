@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Main from './components/Main/Main';
-import Home from './pages/Home';
+import Home from './pages/Home/index';
 // import Category from "./pages/Catergory";
 
 import ItemPage from './pages/Item/ItemPage';

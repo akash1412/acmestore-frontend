@@ -7,7 +7,7 @@ import DrawerContainer from '../DrawerContainer/DrawerContainer';
 import DrawerContextProvider from '../../context/DrawerContext';
 
 interface MainCompProps {
-	children: string | React.ReactNode;
+	children: React.ReactNode;
 }
 
 const Main: React.FC<MainCompProps> = ({ children }) => {
@@ -21,7 +21,6 @@ const Main: React.FC<MainCompProps> = ({ children }) => {
 		<Box d='flex' flexDir='column'>
 			<DrawerContextProvider>
 				<Navbar toggleSidebar={handleSidebarToggle} />
-
 				<Box mt='4.5rem' pos='relative'>
 					<Box
 						minH='calc(100vh - 4.5rem)'
@@ -32,7 +31,6 @@ const Main: React.FC<MainCompProps> = ({ children }) => {
 						{children}
 					</Box>
 				</Box>
-
 				<DrawerContainer />
 			</DrawerContextProvider>
 		</Box>

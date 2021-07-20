@@ -17,6 +17,7 @@ import {
 
 import Cart from '../Cart/Cart';
 import { useDrawerContext } from './../../context/DrawerContext';
+import { totalAmount } from '../../utils/helper';
 // import Button from "./../button/button";
 
 const DrawerContainer = () => {
@@ -50,7 +51,7 @@ const DrawerContainer = () => {
 					<Cart cartItems={allCartItems} />
 				</DrawerBody>
 				<DrawerFooter pos='relative'>
-					<Footer />
+					<Footer total={totalAmount(allCartItems)} />
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
@@ -59,7 +60,7 @@ const DrawerContainer = () => {
 
 export default DrawerContainer;
 
-function Footer() {
+function Footer(props: { total: number }): JSX.Element {
 	return (
 		<Box
 			w='100%'
@@ -68,12 +69,12 @@ function Footer() {
 			flexDir='column'
 			alignItems='center'
 			justifyContent='center'>
-			<Box alignSelf='start'>
+			<Box alignSelf='start' d='flex' alignItems='center'>
 				<Heading size='md' color='#ccc'>
 					Total:
 				</Heading>
-				<Text fontWeight='bold' fontSize='1.4rem'>
-					${(5000).toFixed(2)}
+				<Text ml='.5rem' fontWeight='bold' fontSize='1.4rem'>
+					${props.total}
 				</Text>
 			</Box>
 			<Button

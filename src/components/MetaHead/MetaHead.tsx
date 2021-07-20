@@ -9,7 +9,7 @@ const MetaHead: React.FC<MetaProps> = ({ title }) => {
 	return (
 		<Helmet>
 			<meta charSet='utf-8' />
-			<title>ACME | {title}</title>
+			<title>{title}</title>
 		</Helmet>
 	);
 };

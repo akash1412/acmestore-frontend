@@ -1,16 +1,13 @@
 import { useState, useEffect } from 'react';
 
-import axios from './../API/API';
-import { Item } from '../Interface/Interface';
+import axios, { AxiosRequestConfig } from 'axios';
 
-const useFetch = (
-	url: string,
-	options: any,
-	query?: string
-): [{ total: number; items: Item[] } | null, boolean] => {
-	const [data, setData] = useState<{ total: number; items: Item[] } | null>(
-		null
-	);
+export default function useFetch<D>(props: {
+	url: string;
+	slug?: string;
+	options?: AxiosRequestConfig;
+}): [D, boolean] {
+	const [data, setData] = useState(null as unknown as D);
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -19,10 +16,9 @@ const useFetch = (
 
 		function FETCH() {
 			axios({
-				url: `${url}/${query}`,
-				...options,
+				url: `https://ecom-api-v1.herokuapp.com/api/v1${props.url}`,
+				method: 'GET',
 			}).then(res => {
-				console.log(res);
 				setData(res.data.data);
 
 				setIsLoading(false);
@@ -30,9 +26,9 @@ const useFetch = (
 		}
 
 		FETCH();
-	}, []);
+	}, [props.url, props.slug]);
 
 	return [data, isLoading];
-};
+}
 
-export default useFetch;
+// export default useFetch;

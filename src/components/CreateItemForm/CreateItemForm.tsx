@@ -22,14 +22,23 @@ import { Flex } from '@chakra-ui/react';
 import axios from './../../API/API';
 import useToastAPI from './../../hooks/useToastAPI';
 
+interface ICreateItemValues {
+	title: string;
+	price: number;
+	image: string;
+	description: string;
+	category: string;
+}
+
 const CreateItemForm: FC = () => {
-	const { inputs, handleChange, clearForm, resetForm } = useForm({
-		title: '',
-		price: 0,
-		image: '',
-		description: '',
-		category: '',
-	});
+	const { inputs, handleChange, clearForm, resetForm } =
+		useForm<ICreateItemValues>({
+			title: '',
+			price: 0,
+			image: '',
+			description: '',
+			category: '',
+		});
 
 	const [preview, setPreview] = useState<any>(null);
 
@@ -41,7 +50,7 @@ const CreateItemForm: FC = () => {
 
 	useEffect(() => {
 		if (inputs.image) {
-			const reader = new FileReader();
+			const reader: any = new FileReader();
 
 			reader.readAsDataURL(inputs.image);
 
@@ -62,7 +71,7 @@ const CreateItemForm: FC = () => {
 			let imgUrl = '';
 
 			if (inputs.image) {
-				imgUrl = await uploadImageToCloud(inputs.image);
+				imgUrl = await uploadImageToCloud(inputs.image, 'czgq4bpq');
 			}
 
 			if (!imgUrl) throw new Error('something went wrong');

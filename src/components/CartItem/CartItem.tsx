@@ -1,86 +1,83 @@
 import { FC } from 'react';
-import { CartItem as ICartItem } from '../../Interface/Interface';
-import { Box, Image, Heading, Text, Stack, Icon } from '@chakra-ui/react';
-import { IoIosClose } from 'react-icons/io';
-
+import { CartItem as ICartItem, UPDATE_TYPE } from '../../Interface/Interface';
 import {
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper,
-	NumberIncrementStepper,
-	NumberDecrementStepper,
+	Box,
+	Image,
+	Heading,
+	Text,
+	Stack,
+	Button,
+	HStack,
 } from '@chakra-ui/react';
 
 interface Props extends ICartItem {
-	removeItemFromCart: (item: ICartItem) => void;
+	updateItemQuantity: (item: ICartItem, type: UPDATE_TYPE) => void;
+	deleteItem: (item: ICartItem) => void;
 }
 
 const CartItem: FC<Props> = props => {
-	const {
-		removeItemFromCart,
-		id,
-		title,
-		price,
-		image,
-		quantity,
-		itemID,
-		user,
-	} = props;
+	const { updateItemQuantity, deleteItem, ...itemProps } = props;
 
 	return (
 		<Box d='flex' w='100%' justifyContent='flex-start' mb='2rem'>
-			<Box w='5rem' h='5rem' borderRadius='.4rem' mr='1rem' overflow='hidden'>
-				<Image w='100%' h='100%' objectFit='cover' src={image} alt={title} />
+			<Box w='5rem' borderRadius='.4rem' mr='1rem' overflow='hidden'>
+				<Image
+					w='100%'
+					h='100%'
+					objectFit='cover'
+					src={itemProps.image}
+					alt={itemProps.title}
+				/>
 			</Box>
 
 			<Stack flexDir='column' justifyContent='space-between' flexGrow={1}>
 				<Heading fontSize='1.2rem' mb='.4rem'>
-					{title}
+					{itemProps.title}
 				</Heading>
-				<Text>${price}</Text>
+				<Text>${itemProps.price}</Text>
 
-				<ItemQuantitiy value={quantity} min={1} max={5} />
-			</Stack>
-			<Stack ml='1rem' direction='column' spacing='1rem'>
-				<Box
-					cursor='pointer'
-					onClick={() =>
-						removeItemFromCart({
-							id,
-							title,
-							price,
-							image,
-							quantity,
-							itemID,
-							user,
-						})
-					}>
-					<Icon as={IoIosClose} fontSize='2rem' fill='red.500' />
-				</Box>
+				<ItemQuantitiy
+					updateQuantity={updateItemQuantity}
+					deleteItem={deleteItem}
+					itemProps={itemProps}
+				/>
 			</Stack>
 		</Box>
 	);
 };
-const ItemQuantitiy: FC<{ value: number; min: number; max: number }> =
-	props => {
-		return (
-			<NumberInput
-				size='xs'
-				maxW={16}
-				defaultValue={props.value}
-				min={props.min}
-				max={props.max}
-				keepWithinRange={true}
-				onChange={value => {
-					console.log(value);
-				}}>
-				<NumberInputField />
-				<NumberInputStepper>
-					<NumberIncrementStepper />
-					<NumberDecrementStepper />
-				</NumberInputStepper>
-			</NumberInput>
-		);
-	};
+const ItemQuantitiy: FC<{
+	itemProps: any;
+	deleteItem: any;
+	updateQuantity: any;
+}> = ({ deleteItem, updateQuantity, itemProps }) => {
+	return (
+		<Stack direction='row'>
+			<HStack maxW='120px'>
+				<Button
+					variant='outline'
+					p='0'
+					disabled={itemProps.quantity === 5}
+					onClick={() => updateQuantity(itemProps, 'INC')}>
+					+
+				</Button>
+
+				<Text>{itemProps.quantity}</Text>
+				<Button
+					variant='outline'
+					p='0'
+					disabled={itemProps.quantity === 1}
+					onClick={() => updateQuantity(itemProps, 'DEC')}>
+					-
+				</Button>
+			</HStack>
+			<Button
+				variant='outline'
+				_hover={{ bgColor: '#000', color: '#fff' }}
+				onClick={() => deleteItem(itemProps)}>
+				Delete
+			</Button>
+		</Stack>
+	);
+};
 
 export default CartItem;

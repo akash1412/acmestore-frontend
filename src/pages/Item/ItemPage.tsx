@@ -10,6 +10,7 @@ import { useAuthContext } from '../../context/AuthContext';
 
 import ItemContent from './parts/ItemContent';
 import MetaHead from '../../components/MetaHead/MetaHead';
+import useFetch from '../../hooks/useFetch';
 
 interface RouteProps {
 	slug: string;
@@ -20,26 +21,30 @@ interface Props extends RouteComponentProps<RouteProps> {}
 const ItemPage: FC<Props> = ({ match, history }) => {
 	const { user } = useAuthContext();
 
-	const [isLoading, setIsLoading] = useState(false);
+	// const [isLoading, setIsLoading] = useState(false);
 
-	const [data, setData] = useState<null | Item>(null);
+	// const [data, setData] = useState<null | Item>(null);
+
+	const [data, isLoading] = useFetch<{ item: Item }>({
+		url: `/store/${match.params.slug}`,
+	});
 
 	const toast = useToastAPI();
 
-	useEffect(() => {
-		setIsLoading(true);
-		function GET_ITEM() {
-			axios({
-				url: `/store/${match.params.slug}`,
-			}).then(res => {
-				setData(res.data.data.item);
+	// useEffect(() => {
+	// 	setIsLoading(true);
+	// 	function GET_ITEM() {
+	// 		axios({
+	// 			url: `/store/${match.params.slug}`,
+	// 		}).then(res => {
+	// 			setData(res.data.data.item);
 
-				setIsLoading(false);
-			});
-		}
+	// 			setIsLoading(false);
+	// 		});
+	// 	}
 
-		GET_ITEM();
-	}, [match.params.slug]);
+	// 	GET_ITEM();
+	// }, [match.params.slug]);
 
 	const [deletingItem, setDeletingItem] = useState(false);
 
@@ -47,7 +52,7 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 		setDeletingItem(true);
 
 		axios({
-			url: `/store/${data?.slug}`,
+			url: `/store/${data?.item?.slug}`,
 			method: 'DELETE',
 		})
 			.then(() => {
@@ -83,14 +88,13 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 				justifyContent='center'
 				alignItems='center'>
 				<Spinner size='xl' />
-				{/* <ItemScreen /> */}
 			</Box>
 		);
 	}
 
 	return (
 		<Box w='100%' h='100%'>
-			<MetaHead title={match.params.slug} />
+			<MetaHead title={`ACME | ${match.params.slug}`} />
 			<Icon
 				as={BsArrowLeft}
 				mt='2rem'
@@ -101,10 +105,10 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 			/>
 			<Box my={['2rem', '4rem']} d='flex' justifyContent='center'>
 				<ItemContent
-					{...data}
 					role={user?.role}
 					handleDeleteItemAction={handleDeleteItemAction}
 					deletingItem={deletingItem}
+					{...data?.item}
 				/>
 			</Box>
 		</Box>

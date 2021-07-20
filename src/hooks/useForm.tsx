@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-export default function useForm(initial: any) {
-	const [inputs, setInputs] = useState(initial);
+export default function useForm<T>(initial: T) {
+	const [inputs, setInputs] = useState<T>(initial);
 
 	const handleChange = (e: any) => {
 		let { name, value, type }: { name: any; value: any; type: any } = e.target;
@@ -26,6 +26,9 @@ export default function useForm(initial: any) {
 			Object.entries(inputs).map(([key, value]) => [key, ''])
 		);
 
+		console.log(blankState);
+
+		//@ts-ignore
 		setInputs(blankState);
 	};
 

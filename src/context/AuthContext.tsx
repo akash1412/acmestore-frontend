@@ -1,9 +1,9 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
-import jwt, { JwtPayload } from "jwt-decode";
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import jwt, { JwtPayload } from 'jwt-decode';
 
-import { IUpdateProfile } from "../Interface/Interface";
+import { IUpdateProfile } from '../Interface/Interface';
 interface User {
 	name: string;
 	role: string;
@@ -36,7 +36,7 @@ export const useAuthContext = () => React.useContext(AuthContext);
 const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 	const [user, setUser] = React.useState<any | null>((): any => {
 		// @ts-ignore
-		const user = JSON.parse(localStorage.getItem("user"));
+		const user = JSON.parse(localStorage.getItem('user'));
 		// if (user) {
 		// 	const payload: number = jwt<JwtPayload>(user?.token).exp!;
 		// 	const isTokenExpired = Date.now() > new Date(payload * 1000).getTime();
@@ -52,7 +52,7 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 	const history = useHistory();
 
 	React.useEffect(() => {
-		window.localStorage.setItem("user", JSON.stringify(user));
+		window.localStorage.setItem('user', JSON.stringify(user));
 	}, [user]);
 
 	const handleAuthState = (data: User) => {
@@ -65,15 +65,6 @@ const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 
 	const signOut = async () => {
 		try {
-			// await axios({
-			// 	url: "https://ecom-api-v1.herokuapp.com/api/v1/users/signout",
-			// 	headers: {
-			// 		// @ts-ignore
-			// 		authorization: `Bearer ${JSON.parse(user.token)}`,
-			// 	},
-			// 	method: "DELETE",
-			// }).then(() => localStorage.removeItem("token"));
-
 			setUser(null);
 
 			window.location.reload();

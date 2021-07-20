@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Box, Spinner } from '@chakra-ui/react';
+import { Box, Spinner, Divider, Link } from '@chakra-ui/react';
 import axios from '../../API/API';
 import AxiosAPI from 'axios';
 import { useAuthContext } from '../../context/AuthContext';
@@ -10,6 +10,7 @@ import ProfileDetails from './parts/profileDetails';
 import { CartItem, IUpdateProfile } from '../../Interface/Interface';
 import useToastAPI from './../../hooks/useToastAPI';
 import { RouteComponentProps } from 'react-router-dom';
+import MetaHead from '../../components/MetaHead/MetaHead';
 
 interface ICartItem extends CartItem {
 	itemID: string;
@@ -50,8 +51,6 @@ const ProfilePage: FC<RouteComponentProps> = () => {
 		});
 	}, [user?.token]);
 
-	console.log(profile?.cartItems);
-
 	if (isLoading) {
 		return (
 			<Box pos='absolute' w='100%' h='100%' d='grid' placeItems='center'>
@@ -87,20 +86,25 @@ const ProfilePage: FC<RouteComponentProps> = () => {
 				isClosable: true,
 			});
 
-			console.log(error.response);
+			console.error(error.response);
 		}
 	};
 
 	return (
 		<Box
 			px={['1rem', '2rem']}
-			py='1rem'
+			py='2rem'
 			w='100%'
 			h='100%'
 			d='flex'
 			justifyContent='center'>
+			<MetaHead title={`Profile | ${profile?.name}`} />
 			<Box
-				w={['100%', '100%', '80%', '50%']}
+				p='1.5rem'
+				borderRadius='.6rem'
+				w={['100%', '100%', '80%', '35rem']}
+				bgColor='#fff'
+				boxShadow='lg'
 				d='flex'
 				flexDir='column'
 				alignItems='center'>
@@ -112,8 +116,10 @@ const ProfilePage: FC<RouteComponentProps> = () => {
 					lastUpdated={profile?.updatedAt}
 					UpdateMe={UpdateMe}
 				/>
-
-				{/* <CartItems cartItems={profile?.cartItems} /> */}
+				<Divider orientation='horizontal' />
+				{/* <Link href='/' w='100%' bgColor='black' color='#fff' p='.4rem'>
+					update password
+				</Link> */}
 			</Box>
 		</Box>
 	);

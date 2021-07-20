@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
-import { Box, Input, Stack, Text } from "@chakra-ui/react";
-import { IUpdateProfile } from "../../../Interface/Interface";
-import Button from "../../../components/button/button";
+import { FC } from 'react';
+import { Box, Input, Stack, Button, Spinner } from '@chakra-ui/react';
+import { IUpdateProfile } from '../../../Interface/Interface';
+
+import useForm from './../../../hooks/useForm';
 
 interface Props {
 	name?: string;
@@ -10,63 +11,55 @@ interface Props {
 	UpdateMe: (data: IUpdateProfile) => Promise<void>;
 }
 
+interface IFormValues {
+	name?: string;
+	email?: string;
+}
+
 const ProfileDetails: FC<Props> = ({ name, email, lastUpdated, UpdateMe }) => {
-	const [detailInputs, setDetailsInputs] = useState<{
-		name: string | undefined;
-		email: string | undefined;
-	}>({
+	const { inputs, handleChange, clearForm } = useForm<IFormValues>({
 		name,
 		email,
 	});
 
-	const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-		const { name, value } = e.currentTarget;
-
-		setDetailsInputs({ ...detailInputs, [name]: value });
-	};
-
-	const saveEdit = (e: any) => {
+	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		UpdateMe(detailInputs);
+
+		UpdateMe(inputs);
 	};
 
 	return (
-		<Box w='90%' mt='2rem' py='1rem'>
-			<Text fontWeight='bold' mb='1rem'>
-				last updated: {new Date(lastUpdated || "").toDateString()}
-			</Text>
-			<form onSubmit={saveEdit}>
-				<Stack flexDir='column' spacing='1rem'>
+		<Box w='100%' mt='2rem'>
+			<form onSubmit={handleSubmit}>
+				<Stack flexDir='column' justifyContent='space-between' spacing='1rem'>
 					<Input
 						type='text'
 						name='name'
-						border='2px solid #000'
-						value={detailInputs.name}
+						border='1px solid #000'
+						value={inputs.name}
 						placeholder='name'
-						onChange={handleInputChange}
+						onChange={handleChange}
 						required
 					/>
 					<Input
 						type='text'
 						name='email'
-						border='2px solid #000'
-						value={detailInputs.email}
-						onChange={handleInputChange}
+						border='1px solid #000'
+						value={inputs.email}
+						onChange={handleChange}
 						placeholder='email'
 						required
 					/>
 
 					<Button
 						type='submit'
-						w='8rem'
 						color='#fff'
-						bgColor='green.300'
+						bgColor='black'
 						boxShadow='md'
 						fontWeight='bold'
-						_hover={{ bgColor: "green.300", color: "#fff" }}
-						_active={{ bgColor: "green.300", color: "#fff" }}
-						onClick={saveEdit}>
-						save
+						_hover={{ bgColor: 'black', color: '#fff' }}
+						_active={{ bgColor: 'black', color: '#fff' }}>
+						update
 					</Button>
 				</Stack>
 			</form>

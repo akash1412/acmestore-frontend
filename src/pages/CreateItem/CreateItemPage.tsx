@@ -7,7 +7,7 @@ import MetaHead from './../../components/MetaHead/MetaHead';
 function CreateItemPage() {
 	return (
 		<Box m='auto' w='100%' h='auto' py='1.2rem' px={['.8rem', '1rem']}>
-			<MetaHead title='ACME | Add new ' />
+			<MetaHead title='ACME | Add New ' />
 			<Box
 				p={['.5rem', '1.2rem']}
 				w={['100%', '90%', '30rem']}

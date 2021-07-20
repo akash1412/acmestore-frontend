@@ -1,11 +1,14 @@
 import Axios from 'axios';
 
-export const uploadImageToCloud = async (data: string) => {
+export const uploadImageToCloud = async (
+	data: string,
+	uploadPreset: string
+) => {
 	try {
 		const formData = new FormData();
 		formData.append('file', data);
 
-		formData.append('upload_preset', 'czgq4bpq');
+		formData.append('upload_preset', uploadPreset);
 
 		const res = await Axios(
 			'https://api.cloudinary.com/v1_1/dhqp2dd6b/image/upload',

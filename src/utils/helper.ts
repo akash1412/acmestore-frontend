@@ -1,9 +1,9 @@
-import { CartItem, CartItems } from "../Interface/Interface";
+import { CartItem, CartItems, UPDATE_TYPE } from '../Interface/Interface';
 
 export const CapitalizeLetter = (string: string) => {
-	const [FirstLetter, ...restLetter] = string.split("");
+	const [FirstLetter, ...restLetter] = string.split('');
 
-	return [FirstLetter.toUpperCase(), ...restLetter].join("");
+	return [FirstLetter.toUpperCase(), ...restLetter].join('');
 };
 
 export const saveItemToCart = (
@@ -25,24 +25,23 @@ export const saveItemToCart = (
 	return [...CartItems, { ...newItemToAdd, quantity: 1 }];
 };
 
-export const deleteItemFromCart = (
+export const updateItem = (
 	itemToRemove: CartItem,
-	CartItems: CartItems
+	CartItems: CartItems,
+	type: UPDATE_TYPE
 ) => {
-	const getItemToRemoveFromCart = CartItems.find(
-		cartItem => cartItem.id === itemToRemove.id
-	)!;
+	return CartItems.map((cartItem: CartItem) => {
+		return cartItem.id === itemToRemove.id
+			? {
+					...cartItem,
+					quantity:
+						type === 'INC' ? cartItem.quantity + 1 : cartItem.quantity - 1,
+			  }
+			: cartItem;
+	});
+};
 
-	console.log(getItemToRemoveFromCart?.quantity > 1);
-
-	if (getItemToRemoveFromCart?.quantity > 1) {
-		return CartItems.map((cartItem: CartItem) => {
-			return cartItem.id === itemToRemove.id
-				? { ...cartItem, quantity: cartItem.quantity - 1 }
-				: cartItem;
-		});
-	}
-
+export const deleteItem = (itemToRemove: CartItem, CartItems: CartItems) => {
 	return CartItems.filter(
 		(cartItem: CartItem) => cartItem.id !== itemToRemove.id
 	);
@@ -53,7 +52,3 @@ export const totalAmount = (allCartItems: CartItems) =>
 		(acc, item: CartItem) => item.price * item.quantity + acc,
 		0
 	);
-
-
-
-	

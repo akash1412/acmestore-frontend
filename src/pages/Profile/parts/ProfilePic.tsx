@@ -1,9 +1,11 @@
 import { FC, useState } from 'react';
-import { Box, Icon, Avatar, FormLabel, Input } from '@chakra-ui/react';
+import { Box, Icon, Avatar, FormLabel, Input, Image } from '@chakra-ui/react';
 import { FiEdit2 } from 'react-icons/fi';
 import AxiosAPI from 'axios';
 import useToastAPI from './../../../hooks/useToastAPI';
 import { useAuthContext } from '../../../context/AuthContext';
+import avatarPlaceholder from '../../../assets/images/avatar-placeholder.jpg';
+import { uploadImageToCloud } from './../../../utils/upload';
 
 interface Props {
 	name?: string;
@@ -22,32 +24,25 @@ const ProfilePic: FC<Props> = ({ name, photo }) => {
 
 		if (!file) return;
 
-		const reader = new FileReader();
-
-		reader.readAsDataURL(file);
-
-		const formData = new FormData();
-		formData.append('file', file);
-		formData.append('upload_preset', 'x7azl0iw');
-
 		try {
-			AxiosAPI('https://api.cloudinary.com/v1_1/dhqp2dd6b/image/upload', {
-				method: 'POST',
-				data: formData,
-			}).then(result => {
-				AxiosAPI({
-					url: 'https://ecom-api-v1.herokuapp.com/api/v1/users/updateMe',
-					method: 'PATCH',
-					headers: {
-						authorization: `Bearer ${
-							JSON.parse(window.localStorage.getItem('user')!).token
-						}`,
-					},
-					data: { photo: result.data.url },
-				}).then(() => {
+			uploadImageToCloud(file, 'x7azl0iw')
+				.then(imgUrl => {
+					return AxiosAPI({
+						url: 'https://ecom-api-v1.herokuapp.com/api/v1/users/updateMe',
+						method: 'PATCH',
+						headers: {
+							authorization: `Bearer ${
+								JSON.parse(window.localStorage.getItem('user')!).token
+							}`,
+						},
+						data: { photo: imgUrl },
+					});
+				})
+				.then(res => {
+					const { photo } = res.data.data.updatedDetails;
+
 					toast({
 						title: 'Profile Pic Updated Successfully',
-
 						status: 'success',
 						isClosable: true,
 						duration: 800,
@@ -55,9 +50,8 @@ const ProfilePic: FC<Props> = ({ name, photo }) => {
 
 					window.location.reload();
 
-					updateUserOverviewData({ photo: result.data.url });
+					updateUserOverviewData({ photo });
 				});
-			});
 		} catch (error) {
 			console.log(error.response);
 
@@ -72,17 +66,21 @@ const ProfilePic: FC<Props> = ({ name, photo }) => {
 	};
 
 	return (
-		<Box d='flex' flexDir='column'>
-			<Avatar size='2xl' name={name} src={previewImg} />
+		<Box w='10rem' h='10rem' pos='relative'>
+			<Avatar w='100%' h='100%' name={name} src={previewImg} />
 			<FormLabel
-				alignSelf='center'
+				position='absolute'
+				top='2px'
+				right='5px'
 				htmlFor='file'
 				cursor='pointer'
-				mt='3rem'
-				w='4rem'
-				p='0.5rem 0'
-				textAlign='center'
-				bgColor='green.400'
+				m='0'
+				w='3rem'
+				h='3rem'
+				borderRadius='50%'
+				bgColor='#ffba08'
+				d='grid'
+				placeItems='center'
 				boxShadow='md'>
 				<Icon as={FiEdit2} />
 			</FormLabel>

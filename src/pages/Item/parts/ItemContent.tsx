@@ -12,14 +12,13 @@ interface Props extends Partial<Item> {
 
 const ItemContent: FC<Props> = ({
 	role,
-
 	handleDeleteItemAction,
 	deletingItem,
 	...data
 }) => {
 	return (
 		<>
-			<Box // py={[".8rem", ".8rem", "1rem"]}
+			<Box
 				w='100%'
 				d='flex'
 				flexDir={['column', 'column', 'row']}

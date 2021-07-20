@@ -3,48 +3,22 @@ import { Box } from '@chakra-ui/react';
 import { BsArrowRight, BsArrowLeft } from 'react-icons/bs';
 // import useFetch from '../hooks/useFetch';
 import { RouteComponentProps } from 'react-router-dom';
-import Collection from '../components/Collection/Collection';
+import Collection from '../../components/Collection/Collection';
 
-import { ItemsLoading } from '../components/SkeletonScreens/SkeletonScreen';
-import Button from '../components/button/button';
-import { Item } from '../Interface/Interface';
-import axios from '../API/API';
-import MetaHead from '../components/MetaHead/MetaHead';
+import { ItemsLoading } from '../../components/SkeletonScreens/SkeletonScreen';
+import Button from '../../components/button/button';
+import { Item } from '../../Interface/Interface';
+import axios from '../../API/API';
+import MetaHead from '../../components/MetaHead/MetaHead';
+import CategoryLinks from './CategoryLinks';
+import useFetch from './../../hooks/useFetch';
 
 interface Props extends RouteComponentProps<{ page: string }> {}
 
 const Home: FC<Props> = ({ match, history }) => {
-	// const [data, isLoading] = useFetch(
-	// 	"/store",
-	// 	{ method: "GET" },
-	// 	match.params.page
-	// );
-
-	const [isLoading, setIsLoading] = useState(false);
-
-	const [data, setData] = useState<{ total: number; items: Item[] } | null>(
-		null
-	);
-
-	if (match.params) {
-		console.log(match);
-	}
-	useEffect(() => {
-		setIsLoading(true);
-		function FETCH() {
-			axios({
-				url: `/store`,
-				method: 'GET',
-			}).then(res => {
-				console.log(res);
-				setData(res.data.data);
-
-				setIsLoading(false);
-			});
-		}
-
-		FETCH();
-	}, [history.location.search]);
+	const [data, isLoading] = useFetch<{ total: number; items: Item[] }>({
+		url: '/store',
+	});
 
 	if (isLoading) {
 		return (
@@ -63,6 +37,7 @@ const Home: FC<Props> = ({ match, history }) => {
 			d='flex'
 			flexDir='column'>
 			<MetaHead title='ACME' />
+			{/* <CategoryLinks /> */}
 			<Collection items={data?.items} />
 
 			<Box mt='1rem' d='flex' justifyContent={['space-around', 'center']}>

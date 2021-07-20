@@ -1,5 +1,5 @@
 export interface Item {
-	_id?: string | undefined;
+	_id: string;
 	title: string;
 	slug: string;
 	description?: string;
@@ -34,3 +34,5 @@ export interface IUpdateProfile {
 	email?: string;
 	photo?: string;
 }
+
+export type UPDATE_TYPE = 'INC' | 'DEC';
