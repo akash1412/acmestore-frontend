@@ -72,7 +72,7 @@ const ItemQuantitiy: FC<{
 			</HStack>
 			<Button
 				variant='outline'
-				_hover={{ bgColor: '#000', color: '#fff' }}
+				_hover={{ bgColor: '#d40808', color: '#fff' }}
 				onClick={() => deleteItem(itemProps)}>
 				Delete
 			</Button>

@@ -1,11 +1,15 @@
 import React from 'react';
-import { Flex, Heading } from '@chakra-ui/react';
-
+import { Flex } from '@chakra-ui/react';
 import NavbarOptions from '../NavbarOptions/NavbarOptions';
+import NavLinks from '../NavLinks/NavLinks';
+import { useMediaQuery } from '@chakra-ui/react';
+import Logo from '../Logo/Logo';
 
 const Navbar: React.FC<{
 	toggleSidebar: () => void;
 }> = ({ toggleSidebar }) => {
+	const [matches] = useMediaQuery('(min-width:607px)');
+
 	return (
 		<Flex
 			bgColor='white'
@@ -19,10 +23,10 @@ const Navbar: React.FC<{
 			justifyContent='space-between'
 			boxShadow='md'>
 			<Flex>
-				<Heading size='md'>ACME</Heading>
+				<Logo />
+				{matches && <NavLinks />}
 			</Flex>
-
-			<NavbarOptions />
+			<NavbarOptions toggleSidebar={toggleSidebar} showMenu={matches} />
 		</Flex>
 	);
 };

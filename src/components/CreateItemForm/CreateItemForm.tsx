@@ -31,14 +31,13 @@ interface ICreateItemValues {
 }
 
 const CreateItemForm: FC = () => {
-	const { inputs, handleChange, clearForm, resetForm } =
-		useForm<ICreateItemValues>({
-			title: '',
-			price: 0,
-			image: '',
-			description: '',
-			category: '',
-		});
+	const { inputs, handleChange, clearForm } = useForm<ICreateItemValues>({
+		title: '',
+		price: 0,
+		image: '',
+		description: '',
+		category: '',
+	});
 
 	const [preview, setPreview] = useState<any>(null);
 

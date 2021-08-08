@@ -23,14 +23,7 @@ const MenuProfile: React.FC<Props> = props => {
 	return (
 		<React.Fragment>
 			<Menu>
-				<MenuButton
-					borderRadius='50%'
-					w={['2rem', '3rem']}
-					h={['2rem', '3rem']}
-					border='1px solid #e5e5e5'
-					_hover={{
-						bgColor: '#e5e5e5',
-					}}>
+				<MenuButton borderRadius='50%'>
 					<Avatar size='sm' src={props.src} name={props.name} />
 				</MenuButton>
 				<MenuList px='1rem'>

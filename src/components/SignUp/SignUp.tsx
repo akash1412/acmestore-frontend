@@ -1,45 +1,28 @@
-import React from "react";
+import { useState } from 'react';
 import {
 	Flex,
-	FormControl,
-	FormErrorMessage,
 	Input,
 	FormLabel,
 	Spinner,
 	Heading,
 	Stack,
-} from "@chakra-ui/react";
-import PasswordInput from "../PasswordInput/PasswordInput";
-import Button from "../button/button";
-import { useHistory } from "react-router";
-import axios from "../../API/API";
-import { Form, Formik, FormikProps, Field, FormikHelpers } from "formik";
-import * as Yup from "yup";
-import { useAuthContext } from "../../context/AuthContext";
-import useToastAPI from "./../../hooks/useToastAPI";
+	FormControl,
+} from '@chakra-ui/react';
+import PasswordInput from '../PasswordInput/PasswordInput';
+import Button from '../button/button';
+import { useHistory } from 'react-router';
+import axios from '../../API/API';
 
-interface valueProps {
+import { useAuthContext } from '../../context/AuthContext';
+import useToastAPI from './../../hooks/useToastAPI';
+import useForm from './../../hooks/useForm';
+
+interface IInputValue {
 	name: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
 }
-
-const validationSchema = Yup.object().shape({
-	name: Yup.string()
-		.required()
-		.min(5, "should be a min of 5 characters")
-		.max(20, "should not exceed 20 characters limit"),
-	email: Yup.string().email("Invalid email").required(),
-	password: Yup.string()
-		.required("please enter your password")
-		.min(5, "should be a min of 5 characters")
-		.max(20, "should not exceed 20 characters limit"),
-	confirmPassword: Yup.string()
-		.required("please enter your password")
-		.min(5, "should be a min of 5 characters")
-		.max(20, "should not exceed 20 characters limit"),
-});
 
 const SignUp: React.FC<{}> = () => {
 	const { handleAuthState } = useAuthContext();
@@ -47,151 +30,128 @@ const SignUp: React.FC<{}> = () => {
 	const history = useHistory();
 	const toast = useToastAPI();
 
-	const SignUpUser = async (
-		values: valueProps,
-		actions: FormikHelpers<valueProps>
-	) => {
-		actions.setSubmitting(true);
+	const { inputs, clearForm, handleChange } = useForm<IInputValue>({
+		name: '',
+		email: '',
+		password: 'akash123',
+		confirmPassword: 'akash123',
+	});
+
+	const [isSubmitting, setSubmitting] = useState(false);
+
+	const SignUpUser = async (e: React.FormEvent) => {
+		e.preventDefault();
+
+		setSubmitting(true);
 
 		try {
-			const res = await axios({
-				url: "/users/signup",
-				method: "POST",
-				data: {
-					name: values.name,
-					email: values.email,
-					password: values.password,
-					passwordConfirm: values.confirmPassword,
-				},
-			});
+			// const res = await axios({
+			// 	url: '/users/signup',
+			// 	method: 'POST',
+			// 	data: {
+			// 		name: inputs.name,
+			// 		email: inputs.email,
+			// 		password: inputs.password,
+			// 		passwordConfirm: inputs.confirmPassword,
+			// 	},
+			// });
 
-			const {
-				token,
-				data: { user },
-			} = res.data;
+			// const {
+			// 	token,
+			// 	data: { user },
+			// } = res.data;
 
-			handleAuthState({
-				name: user.name,
-				token: token,
-				role: user.role,
-				photo: user.photo || null,
-			});
-			actions.resetForm();
+			// handleAuthState({
+			// 	name: user.name,
+			// 	token: token,
+			// 	role: user.role,
+			// 	photo: user.photo || null,
+			// });
 
-			history.push("/");
+			console.log(inputs);
+			clearForm();
+
+			history.push('/');
 		} catch (error) {
-			console.log("Error ", error.response);
+			console.log('Error ', error.response);
 
 			//@ts-ignore
 			toast({
 				title: error.response.data.message,
-				status: "error",
+				status: 'error',
 				duration: 1000,
 				isClosable: true,
 			});
 		} finally {
-			actions.setSubmitting(false);
+			setSubmitting(false);
 		}
 	};
 
 	return (
-		<Flex flexDir='column' w={["100%", "25rem"]}>
-			<Heading fontSize={["1.5rem", "2rem"]} mb='1rem'>
+		<Flex flexDir='column' w={['100%', '25rem']}>
+			<Heading fontSize={['1.5rem', '2rem']} mb='1rem'>
 				Create your account
 			</Heading>
-			<Formik
-				initialValues={{
-					name: "",
-					email: "",
-					password: "akash123",
-					confirmPassword: "akash123",
-				}}
-				onSubmit={(values, actions) => SignUpUser(values, actions)}
-				validationSchema={validationSchema}>
-				{({
-					isSubmitting,
 
-					errors,
-				}: FormikProps<valueProps>) => (
-					<Form>
-						<Stack>
-							<Field name='name'>
-								{({ field, form }: any) => (
-									<FormControl
-										isInvalid={form.errors.name && form.touched.name}>
-										<FormLabel fontWeight='semibold'>Name</FormLabel>
-										<Input
-											{...field}
-											borderRadius='none'
-											placeholder='John Doe'
-										/>
-										<FormErrorMessage>{errors.name}</FormErrorMessage>
-									</FormControl>
-								)}
-							</Field>
-							<Field name='email'>
-								{({ field, form }: any) => (
-									<FormControl
-										isInvalid={form.errors.email && form.touched.email}>
-										<FormLabel fontWeight='semibold'>Email address</FormLabel>
-										<Input
-											{...field}
-											borderRadius='none'
-											placeholder='John Doe'
-										/>
-										<FormErrorMessage>{errors.email}</FormErrorMessage>
-									</FormControl>
-								)}
-							</Field>
-							<Field name='password'>
-								{({ field, form }: any) => (
-									<FormControl
-										isInvalid={form.errors.password && form.touched.password}>
-										<FormLabel fontWeight='semibold'>Password</FormLabel>
-										<PasswordInput {...field} placeholder='Password' />
-										<FormErrorMessage>{errors.password}</FormErrorMessage>
-									</FormControl>
-								)}
-							</Field>
-							<Field name='confirmPassword'>
-								{({ field, form }: any) => (
-									<FormControl
-										isInvalid={
-											form.errors.confirmPassword &&
-											form.touched.confirmPassword
-										}>
-										<FormLabel fontWeight='semibold'>
-											Confirm Password
-										</FormLabel>
-										<PasswordInput {...field} placeholder='Confirm Password' />
-										<FormErrorMessage>
-											{errors.confirmPassword}
-										</FormErrorMessage>
-									</FormControl>
-								)}
-							</Field>
+			<form onSubmit={SignUpUser}>
+				<FormControl isDisabled={isSubmitting} aria-disabled={isSubmitting}>
+					<Stack>
+						<FormLabel fontWeight='semibold'>Name</FormLabel>
+						<Input
+							id='name'
+							name='name'
+							value={inputs.name}
+							onChange={handleChange}
+							borderRadius='none'
+							placeholder='John Doe'
+						/>
 
-							<Button
-								type='submit'
-								px='2rem'
-								bgColor='black'
-								color='white'
-								border='1.2px solid black'
-								_hover={{
-									bgColor: "white",
-									color: "black",
-									border: "1.2px solid black",
-								}}
-								opacity={isSubmitting ? ".7" : "1"}
-								isLoading={isSubmitting}
-								spinner={<Spinner size='sm' />}
-								loadingText='creating account...'>
-								Sign Up
-							</Button>
-						</Stack>
-					</Form>
-				)}
-			</Formik>
+						<FormLabel fontWeight='semibold'>Email address</FormLabel>
+						<Input
+							id='email'
+							name='email'
+							value={inputs.email}
+							onChange={handleChange}
+							borderRadius='none'
+							placeholder='john@gmail.com'
+						/>
+
+						<FormLabel fontWeight='semibold'>Password</FormLabel>
+						<PasswordInput
+							name='password'
+							value={inputs.password}
+							onChange={handleChange}
+							placeholder='Password'
+						/>
+
+						<FormLabel fontWeight='semibold'>Confirm Password</FormLabel>
+						<PasswordInput
+							name='confirmPassword'
+							value={inputs.confirmPassword}
+							onChange={handleChange}
+							placeholder='Confirm Password'
+						/>
+
+						<Button
+							type='submit'
+							px='2rem'
+							bgColor='black'
+							color='white'
+							border='1.2px solid black'
+							_hover={{
+								bgColor: 'white',
+								color: 'black',
+								border: '1.2px solid black',
+							}}
+							opacity={isSubmitting ? '.7' : '1'}
+							isLoading={isSubmitting}
+							spinner={<Spinner size='sm' />}
+							loadingText='creating account...'>
+							Sign Up
+						</Button>
+					</Stack>
+				</FormControl>
+			</form>
 		</Flex>
 	);
 };

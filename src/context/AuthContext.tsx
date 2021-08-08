@@ -36,20 +36,18 @@ export const useAuthContext = () => React.useContext(AuthContext);
 const AuthContextProvider: React.FC<ContextProps> = ({ children }) => {
 	const [user, setUser] = React.useState<any | null>((): any => {
 		// @ts-ignore
-		const user = JSON.parse(localStorage.getItem('user'));
-		// if (user) {
-		// 	const payload: number = jwt<JwtPayload>(user?.token).exp!;
-		// 	const isTokenExpired = Date.now() > new Date(payload * 1000).getTime();
-
-		// 	return isTokenExpired ? null : user;
-		// }
-
-		return user;
+		return JSON.parse(localStorage.getItem('user'));
 	});
 
-	console.log(user);
+	React.useEffect(() => {
+		if (user) {
+			//@ts-ignore
+			const payload: number = jwt<JwtPayload>(user?.token).exp;
+			const isTokenExpired = Date.now() > new Date(payload * 1000).getTime();
 
-	const history = useHistory();
+			isTokenExpired && setUser(null);
+		}
+	}, [user]);
 
 	React.useEffect(() => {
 		window.localStorage.setItem('user', JSON.stringify(user));

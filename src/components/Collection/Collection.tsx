@@ -19,15 +19,17 @@ const Collection: React.FC<CollectionProps> = ({ items = [] }): JSX.Element => {
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}>
 			<Grid
+				m='0 auto'
+				maxWidth='1200px'
 				justifyContent='center'
 				gridTemplateColumns={[
 					'repeat(1,1fr)',
-					'repeat(2,1fr)',
+					'repeat(1,1fr)',
 					'repeat(2,1fr)',
 					'repeat(3,1fr)',
+					'repeat(4,1fr)',
 				]}
-				gridAutoRows='1fr'
-				gridGap='1.5rem'
+				gridColumnGap='1rem'
 				gridRowGap={['2rem']}
 				justifyItems='center'>
 				{items.map(item => (

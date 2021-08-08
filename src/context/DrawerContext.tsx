@@ -20,6 +20,7 @@ interface CreateContext {
 	addingItemToCart: boolean;
 	updateItemQuantity: (item: CartItem, type: UPDATE_TYPE) => void;
 	deleteItemFromCart: (item: CartItem) => void;
+	clearAllCartItem: () => void;
 }
 
 const DrawerContext = React.createContext<CreateContext>({
@@ -32,6 +33,7 @@ const DrawerContext = React.createContext<CreateContext>({
 	addingItemToCart: false,
 	updateItemQuantity: (item, type) => {},
 	deleteItemFromCart: item => {},
+	clearAllCartItem: () => {},
 });
 
 interface Props {
@@ -129,7 +131,7 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 			setCartItems(updateItem(item, allCartItems, type));
 
 			await axios({
-				url: `/cart/${item.id}`,
+				url: `/cart/item/${item.id}`,
 				headers: {
 					authorization: `Bearer ${user?.token}`,
 				},
@@ -152,7 +154,7 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 		try {
 			setCartItems(deleteItem(item, allCartItems));
 			await axios({
-				url: `/cart/${item.id}`,
+				url: `/cart/item/${item.id}`,
 				headers: {
 					authorization: `Bearer ${user?.token}`,
 				},
@@ -176,18 +178,33 @@ const DrawerContextProvider: React.FC<Props> = ({ children }) => {
 		}
 	};
 
+	const clearAllCartItem = async () => {
+		try {
+			await axios({
+				url: '/cart/all/clearAll',
+				headers: {
+					authorization: `Bearer ${user?.token}`,
+				},
+				method: 'DELETE',
+			});
+		} catch (error) {}
+	};
+
 	return (
 		<DrawerContext.Provider
 			value={{
 				openDrawer,
 				toggleDrawer,
+
 				activeDrawerTab,
+
 				handleActiveTab,
 				allCartItems,
 				addingItemToCart,
 				addItemToCart,
 				updateItemQuantity,
 				deleteItemFromCart,
+				clearAllCartItem,
 			}}>
 			{children}
 		</DrawerContext.Provider>

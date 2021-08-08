@@ -4,7 +4,7 @@ import { Route, Redirect, RouteComponentProps } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 
 interface Props {
-	path: string;
+	path: string | string[];
 	Component: any; //JSX.Element
 	exact: boolean;
 }

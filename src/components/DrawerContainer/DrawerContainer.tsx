@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, useState } from 'react';
 import { AiOutlineRight } from 'react-icons/ai';
 import {
 	Drawer,
@@ -18,16 +18,47 @@ import {
 import Cart from '../Cart/Cart';
 import { useDrawerContext } from './../../context/DrawerContext';
 import { totalAmount } from '../../utils/helper';
-// import Button from "./../button/button";
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { useAuthContext } from '../../context/AuthContext';
 
-const DrawerContainer = () => {
-	const {
-		openDrawer,
-		toggleDrawer,
-		activeDrawerTab,
+const DrawerContainer: FC<{}> = () => {
+	const { openDrawer, toggleDrawer, activeDrawerTab, allCartItems } =
+		useDrawerContext();
 
-		allCartItems,
-	} = useDrawerContext();
+	const { user } = useAuthContext();
+
+	const [stripeCheckingIn, setStripeCheckingIn] = useState(false);
+
+	const handleCheckout = () => {
+		setStripeCheckingIn(true);
+
+		const itemForCheckout = allCartItems.map(item => ({
+			name: item.title,
+			quantity: item.quantity,
+			price: item.price,
+			image: item.image,
+		}));
+
+		fetch('https://ecom-api-v1.herokuapp.com/api/v1/checkout', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+
+				authorization: `Bearer ${user?.token}`,
+			},
+			body: JSON.stringify({
+				checkoutType: 'cart',
+				items: itemForCheckout,
+			}),
+		})
+			.then(data => data.json())
+			.then(res => {
+				setStripeCheckingIn(false);
+				window.location = res.url;
+			})
+			.catch(err => console.log(err));
+	};
 
 	return (
 		<Drawer
@@ -51,7 +82,11 @@ const DrawerContainer = () => {
 					<Cart cartItems={allCartItems} />
 				</DrawerBody>
 				<DrawerFooter pos='relative'>
-					<Footer total={totalAmount(allCartItems)} />
+					<Footer
+						total={totalAmount(allCartItems)}
+						handleCheckout={handleCheckout}
+						stripeCheckingIn={stripeCheckingIn}
+					/>
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
@@ -60,7 +95,13 @@ const DrawerContainer = () => {
 
 export default DrawerContainer;
 
-function Footer(props: { total: number }): JSX.Element {
+function Footer(props: {
+	total: number;
+	handleCheckout: () => void;
+	stripeCheckingIn: boolean;
+}): JSX.Element {
+	const history = useHistory();
+
 	return (
 		<Box
 			w='100%'
@@ -78,15 +119,15 @@ function Footer(props: { total: number }): JSX.Element {
 				</Text>
 			</Box>
 			<Button
-				maxW='15rem'
+				w='20rem'
 				py='1.5rem'
 				px='1rem'
 				bgColor='#f9c74f'
 				_hover={{
-					bgColor: '#ffba08',
+					bgColor: '#f9c64fe6',
 				}}
 				_active={{
-					bgColor: '#ffba08',
+					bgColor: '#f9c64fe6',
 				}}
 				borderRadius='2rem'
 				fontWeight='bold'
@@ -94,7 +135,10 @@ function Footer(props: { total: number }): JSX.Element {
 				leftIcon={
 					<Icon fontWeight='bold' fontSize='1rem' as={AiOutlineRight} />
 				}
-				iconSpacing='2rem'>
+				iconSpacing='2rem'
+				isLoading={props.stripeCheckingIn}
+				loadingText='processing...'
+				onClick={props.handleCheckout}>
 				CHECKOUT
 			</Button>
 		</Box>

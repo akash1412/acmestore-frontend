@@ -11,6 +11,7 @@ import { useAuthContext } from '../../context/AuthContext';
 import ItemContent from './parts/ItemContent';
 import MetaHead from '../../components/MetaHead/MetaHead';
 import useFetch from '../../hooks/useFetch';
+import LoadingUI from '../../components/LoadingUI/LoadingUI';
 
 interface RouteProps {
 	slug: string;
@@ -21,30 +22,11 @@ interface Props extends RouteComponentProps<RouteProps> {}
 const ItemPage: FC<Props> = ({ match, history }) => {
 	const { user } = useAuthContext();
 
-	// const [isLoading, setIsLoading] = useState(false);
-
-	// const [data, setData] = useState<null | Item>(null);
-
-	const [data, isLoading] = useFetch<{ item: Item }>({
-		url: `/store/${match.params.slug}`,
+	const { data, isLoading, error } = useFetch<{ item: Item }>({
+		url: `https://ecom-api-v1.herokuapp.com/api/v1/store/${match.params.slug}`,
 	});
 
 	const toast = useToastAPI();
-
-	// useEffect(() => {
-	// 	setIsLoading(true);
-	// 	function GET_ITEM() {
-	// 		axios({
-	// 			url: `/store/${match.params.slug}`,
-	// 		}).then(res => {
-	// 			setData(res.data.data.item);
-
-	// 			setIsLoading(false);
-	// 		});
-	// 	}
-
-	// 	GET_ITEM();
-	// }, [match.params.slug]);
 
 	const [deletingItem, setDeletingItem] = useState(false);
 
@@ -52,7 +34,10 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 		setDeletingItem(true);
 
 		axios({
-			url: `/store/${data?.item?.slug}`,
+			url: `/store/${data?.item.slug}`,
+			headers: {
+				authorization: `Bearer ${user?.token}`,
+			},
 			method: 'DELETE',
 		})
 			.then(() => {
@@ -62,6 +47,8 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 					duration: 2000,
 					isClosable: true,
 				});
+				setDeletingItem(false);
+				history.push('/');
 			})
 			.catch(() => {
 				toast({
@@ -71,25 +58,12 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 					duration: 3000,
 					isClosable: true,
 				});
-			})
-			.finally(() => {
 				setDeletingItem(false);
-				history.push('/');
 			});
 	};
 
 	if (isLoading) {
-		return (
-			<Box
-				pos='absolute'
-				w='100%'
-				h='100%'
-				d='flex'
-				justifyContent='center'
-				alignItems='center'>
-				<Spinner size='xl' />
-			</Box>
-		);
+		return <LoadingUI />;
 	}
 
 	return (
@@ -104,12 +78,14 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 				onClick={() => history.goBack()}
 			/>
 			<Box my={['2rem', '4rem']} d='flex' justifyContent='center'>
-				<ItemContent
-					role={user?.role}
-					handleDeleteItemAction={handleDeleteItemAction}
-					deletingItem={deletingItem}
-					{...data?.item}
-				/>
+				{data && (
+					<ItemContent
+						role={user?.role}
+						handleDeleteItemAction={handleDeleteItemAction}
+						deletingItem={deletingItem}
+						{...data?.item}
+					/>
+				)}
 			</Box>
 		</Box>
 	);

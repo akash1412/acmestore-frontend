@@ -2,33 +2,49 @@ import { useState, useEffect } from 'react';
 
 import axios, { AxiosRequestConfig } from 'axios';
 
-export default function useFetch<D>(props: {
-	url: string;
-	slug?: string;
-	options?: AxiosRequestConfig;
-}): [D, boolean] {
-	const [data, setData] = useState(null as unknown as D);
+interface State<D> {
+	isLoading: boolean;
+	data?: D;
+	error?: string;
+}
 
-	const [isLoading, setIsLoading] = useState(false);
+export default function useFetch<D = unknown>({
+	url,
+	options,
+}: {
+	url: string;
+
+	options?: AxiosRequestConfig;
+}) {
+	//@ts-ignore
+	const [state, setState] = useState<State<D>>({
+		isLoading: false,
+		data: undefined,
+		error: undefined,
+	});
 
 	useEffect(() => {
-		setIsLoading(true);
-
 		function FETCH() {
-			axios({
-				url: `https://ecom-api-v1.herokuapp.com/api/v1${props.url}`,
-				method: 'GET',
-			}).then(res => {
-				setData(res.data.data);
-
-				setIsLoading(false);
+			setState({
+				...state,
+				isLoading: true,
 			});
+			try {
+				axios(url, options).then(res => {
+					setState({ ...state, data: res.data.data });
+				});
+			} catch (error: any) {
+				setState({ ...state, error: error.response.message });
+			} finally {
+				setState({
+					...state,
+					isLoading: true,
+				});
+			}
 		}
 
 		FETCH();
-	}, [props.url, props.slug]);
+	}, [url]);
 
-	return [data, isLoading];
+	return state;
 }
-
-// export default useFetch;

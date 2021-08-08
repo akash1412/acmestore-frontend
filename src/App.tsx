@@ -12,6 +12,9 @@ import ProfilePage from './pages/Profile/Profile';
 import { useAuthContext } from './context/AuthContext';
 import EditPage from './pages/EditPage';
 import CreateItemPage from './pages/CreateItem/CreateItemPage';
+import PageNotFound from './pages/PageNotFound/index';
+import Category from './pages/Category/index';
+import Checkout from './pages/Checkout/index';
 
 const App: React.FC = () => {
 	const { user } = useAuthContext();
@@ -22,6 +25,7 @@ const App: React.FC = () => {
 		<Main>
 			<Switch>
 				<Route exact path={['/']} component={Home} />
+				<Route exact path={'/s/:category'} component={Category} />
 
 				<Route exact path='/s/:category/:slug' component={ItemPage} />
 				<Route exact path='/auth'>
@@ -29,8 +33,9 @@ const App: React.FC = () => {
 				</Route>
 				<PrivateRoute path='/profile' exact Component={ProfilePage} />
 				<PrivateRoute path='/create' exact Component={CreateItemPage} />
+				<PrivateRoute path='/checkout/:status' exact Component={Checkout} />
 				<PrivateRoute path='/edit/item/:slug' exact Component={EditPage} />
-				<Route path='*' render={() => <div> not found </div>} />
+				<Route path='*' component={PageNotFound} />
 			</Switch>
 		</Main>
 	);

@@ -14,14 +14,21 @@ const AuthPage: FC = () => {
 
 	return (
 		<Box
+			position='absolute'
 			py={['1rem', '.5rem']}
 			px={['.4rem', '.4rem', '1.5rem']}
 			w='100%'
+			h='100%'
 			m={[0, '0 auto']}
 			d={['block', 'grid']}
 			placeItems={['initial', 'center']}>
 			<MetaHead title={`ACME | ${toggleSignup ? 'Signup' : ' Login'} `} />
-			<Box d='flex' flexDir='column' bgColor='#fff' borderRadius='.2rem'>
+			<Box
+				d='flex'
+				flexDir='column'
+				bgColor='#fff'
+				boxShadow='lg'
+				borderRadius='.6rem'>
 				<Box px={['0.5rem', '2rem']} py='1rem' textAlign='center'>
 					{!toggleSignup ? <SignIn /> : <SignUp />}
 				</Box>

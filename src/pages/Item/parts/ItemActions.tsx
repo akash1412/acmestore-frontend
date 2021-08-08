@@ -101,7 +101,8 @@ const ItemActions: FC<Props> = ({
 						fontWeight='bold'
 						ml='2rem'
 						_hover={{ bgColor: 'black', color: '#fff' }}
-						_active={{ bgColor: 'black', color: '#fff' }}>
+						_active={{ bgColor: 'black', color: '#fff' }}
+						onClick={() => history.push(`/checkout/item/${data.slug}`)}>
 						Buy Now
 					</Button>
 				</>
