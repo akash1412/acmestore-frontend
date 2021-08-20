@@ -11,9 +11,10 @@ interface State<D> {
 export default function useFetch<D = unknown>({
 	url,
 	options,
+	dep,
 }: {
 	url: string;
-
+	dep?: any;
 	options?: AxiosRequestConfig;
 }) {
 	//@ts-ignore
@@ -44,7 +45,7 @@ export default function useFetch<D = unknown>({
 		}
 
 		FETCH();
-	}, [url]);
+	}, [url, dep]);
 
 	return state;
 }

@@ -69,14 +69,16 @@ const ItemPage: FC<Props> = ({ match, history }) => {
 	return (
 		<Box w='100%' h='100%'>
 			<MetaHead title={`ACME | ${match.params.slug}`} />
-			<Icon
-				as={BsArrowLeft}
-				mt='2rem'
-				ml='4rem'
-				fontSize='2rem'
-				cursor='pointer'
-				onClick={() => history.goBack()}
-			/>
+			{data && (
+				<Icon
+					as={BsArrowLeft}
+					mt='2rem'
+					ml='4rem'
+					fontSize='2rem'
+					cursor='pointer'
+					onClick={() => history.goBack()}
+				/>
+			)}
 			<Box my={['2rem', '4rem']} d='flex' justifyContent='center'>
 				{data && (
 					<ItemContent

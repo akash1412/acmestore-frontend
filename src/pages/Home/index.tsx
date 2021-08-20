@@ -8,17 +8,30 @@ import { ItemsLoading } from '../../components/SkeletonScreens/SkeletonScreen';
 import { Item } from '../../Interface/Interface';
 
 import MetaHead from '../../components/MetaHead/MetaHead';
-
+import { useState } from 'react';
 import useFetch from './../../hooks/useFetch';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import LoadingUI from '../../components/LoadingUI/LoadingUI';
+import CollectionOverview from './../../components/CollectionOverview/CollectionOverview';
+import { RouteComponentProps } from 'react-router-dom';
 
-interface Props {}
+interface Props extends RouteComponentProps {}
 
-const Home: FC<Props> = () => {
-	const { data, isLoading } = useFetch<{ total: number; items: Item[] }>({
+const Home: FC<Props> = ({ history }) => {
+	const { data: res, isLoading } = useFetch<{ type: string; items: Item[] }[]>({
 		url: 'https://ecom-api-v1.herokuapp.com/api/v1/store/',
 	});
+
+	const [searchInput, setSearchInput] = useState('');
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchInput(e.target.value);
+	};
+
+	const handleFormSubmit = (e: React.FormEvent) => {
+		history.push(`/search?search_query=${searchInput}`);
+		setSearchInput('');
+	};
 
 	if (isLoading) {
 		return <LoadingUI />;
@@ -34,8 +47,15 @@ const Home: FC<Props> = () => {
 			flexDir='column'>
 			<MetaHead title='ACME' />
 
-			<SearchBar />
-			{data && <Collection items={data?.items} />}
+			<SearchBar
+				searchInput={searchInput}
+				handleInputChange={handleInputChange}
+				handleFormSubmit={handleFormSubmit}
+			/>
+			{res &&
+				res.map((data, idx) => (
+					<CollectionOverview key={idx} type={data.type} data={data.items} />
+				))}
 		</Box>
 	);
 };

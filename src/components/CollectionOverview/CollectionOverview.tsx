@@ -13,16 +13,29 @@ interface CollectionOverviewProps {
 
 const MotionBox = motion(Box);
 
-const CollectionOverview: React.FC<CollectionOverviewProps> = ({}) => {
+const CollectionOverview: React.FC<CollectionOverviewProps> = ({
+	type,
+	data,
+}) => {
 	return (
 		<MotionBox
 			transition={{ duration: 0.5 }}
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}>
-			{/* <Link href={`/s/${type}`} fontWeight='bold' fontSize='2rem' color='black'>
-				{CapitalizeLetter(type)}
-			</Link> */}
-			{/* <Collection items={data} /> */}
+			<Box mb='2rem'>
+				<Link
+					href={`/s/${type}`}
+					fontWeight='bold'
+					fontSize='2rem'
+					ml='1.8rem'
+					color='black'
+					textDecor='underline'>
+					{`${CapitalizeLetter(type)}(${data.length})`}
+				</Link>
+				<Box mt='1.2rem'>
+					<Collection items={data} />
+				</Box>
+			</Box>
 		</MotionBox>
 	);
 };

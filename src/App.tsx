@@ -15,22 +15,21 @@ import CreateItemPage from './pages/CreateItem/CreateItemPage';
 import PageNotFound from './pages/PageNotFound/index';
 import Category from './pages/Category/index';
 import Checkout from './pages/Checkout/index';
+import Search from './pages/Search/index';
 
 const App: React.FC = () => {
 	const { user } = useAuthContext();
-
-	//TODOD add 404 route
 
 	return (
 		<Main>
 			<Switch>
 				<Route exact path={['/']} component={Home} />
 				<Route exact path={'/s/:category'} component={Category} />
-
 				<Route exact path='/s/:category/:slug' component={ItemPage} />
 				<Route exact path='/auth'>
 					{user?.token ? <Redirect to='/' /> : <AuthPage />}
 				</Route>
+				<Route exact path='/search' component={Search} />
 				<PrivateRoute path='/profile' exact Component={ProfilePage} />
 				<PrivateRoute path='/create' exact Component={CreateItemPage} />
 				<PrivateRoute path='/checkout/:status' exact Component={Checkout} />

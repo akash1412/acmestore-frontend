@@ -10,6 +10,23 @@ const Navbar: React.FC<{
 }> = ({ toggleSidebar }) => {
 	const [matches] = useMediaQuery('(min-width:607px)');
 
+	const [addBorder, setAddBorder] = React.useState(false);
+
+	React.useEffect(() => {
+		document.addEventListener('scroll', () => {
+			if (window.scrollY >= 12) {
+				setAddBorder(true);
+			} else {
+				setAddBorder(false);
+			}
+		});
+
+		return () =>
+			document.removeEventListener('scroll', () => {
+				setAddBorder(true);
+			});
+	}, []);
+
 	return (
 		<Flex
 			bgColor='white'
@@ -21,7 +38,7 @@ const Navbar: React.FC<{
 			px={['1rem', '1.4rem']}
 			alignItems='center'
 			justifyContent='space-between'
-			boxShadow='md'>
+			boxShadow={addBorder ? 'md' : 'none'}>
 			<Flex>
 				<Logo />
 				{matches && <NavLinks />}

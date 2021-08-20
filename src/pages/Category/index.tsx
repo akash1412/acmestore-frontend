@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps<{ category: string }> {}
 
 const Category: FC<Props> = ({ match }) => {
 	const { data, isLoading } = useFetch<{ total: number; items: Item[] }>({
-		url: `https://ecom-api-v1.herokuapp.com/api/v1/store?category=${match.params.category}`,
+		url: `https://ecom-api-v1.herokuapp.com/api/v1/store/category/${match.params.category}`,
 	});
 
 	if (isLoading) {
